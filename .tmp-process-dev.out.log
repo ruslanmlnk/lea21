@@ -1,0 +1,12 @@
+
+> lea21@0.1.0 dev
+> next dev --port 3000
+
+▲ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.221:3000
+✓ Ready in 1739ms
+
+ GET / 200 in 2.2s (next.js: 1578ms, application-code: 604ms)
+ GET / 200 in 485ms (next.js: 119ms, application-code: 366ms)
+[?25h
