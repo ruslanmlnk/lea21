@@ -1,74 +1,57 @@
-import { images } from "./data";
-import { BackgroundPicture, Reveal, ResponsivePicture } from "./shared";
+import { BackgroundPicture, LandingImage } from './shared'
+import { Reveal } from './shared-client'
 
-const results = [
-  {
-    title: "Більше енергії",
-    description: "З’являється ресурс\nі бажання жити",
-  },
-  {
-    title: "Внутрішній спокій",
-    description: "Зникає тривога, з’являється\nвідчуття “мені добре”",
-  },
-  {
-    title: "Легкість у тілі",
-    description: "Менше напруги, болю\nі дискомфорту",
-  },
-  {
-    title: "Менше контролю",
-    description: "Ти вмієш розслаблятися\nі відпускати",
-  },
-  {
-    title: "Контакт із тілом",
-    description: "Ти відчуваєш себе\nі свої потреби",
-  },
-  {
-    title: "Жіночність і прояв",
-    description: "З’являється м’якість\nі природний прояв",
-  },
-];
+import type { LandingPageContent } from './types'
 
-const resultRows = [results.slice(0, 2), results.slice(2, 4), results.slice(4, 6)];
+export function ResultsSection({ results }: { results: LandingPageContent['results'] }) {
+  const resultRows = [
+    results.items.slice(0, 2),
+    results.items.slice(2, 4),
+    results.items.slice(4, 6),
+  ];
 
-export function ResultsSection() {
   return (
     <section id="results" className="relative overflow-hidden">
-      <BackgroundPicture asset={images.resultsBackground} />
+      <BackgroundPicture asset={results.backgroundImage} />
       <div className="absolute inset-0 bg-black/60" />
       <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,36,63,0.6)_50%,rgba(255,255,255,0.6)_100%)]" />
 
-      <div className="relative mx-auto max-w-[1440px] px-6 py-10 text-white lg:px-[30px] lg:py-[130px]">
-        <Reveal>
+      <div className="relative mx-auto flex max-w-[1440px] flex-col px-6 py-9 text-white lg:block lg:px-[30px] lg:py-[130px]">
+        <Reveal className="order-2 lg:order-none">
           <h2 className="font-display text-[24px] uppercase leading-[1.45] text-white lg:text-[64px]">
-            Що зміниться після проєкту
+            {results.title}
           </h2>
         </Reveal>
 
-        <div className="mt-8 flex flex-col gap-8 lg:mt-[70px] lg:flex-row lg:items-start lg:gap-[100px]">
-          <Reveal delay={0.08} className="shrink-0">
-            <ResponsivePicture asset={images.resultsImage} imgClassName="h-[412px] w-full object-cover lg:h-[510px] lg:w-[640px]" />
+        <Reveal delay={0.08} className="order-1 mb-6 shrink-0 lg:hidden">
+          <LandingImage asset={results.image} imgClassName="h-[412px] w-full object-cover" />
+        </Reveal>
+
+        <div className="order-3 mt-6 flex flex-col gap-6 lg:mt-[70px] lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.94fr)] lg:items-start lg:gap-15 min-[1440px]:grid-cols-[640px_597px] min-[1440px]:gap-[100px]">
+          <Reveal delay={0.08} className="hidden min-w-0 lg:block">
+            <LandingImage asset={results.image} imgClassName="h-[412px] w-full object-cover lg:h-[clamp(360px,35.5vw,510px)] min-[1440px]:h-[510px] min-[1440px]:w-[640px]" />
           </Reveal>
 
-          <div className="flex flex-col gap-8 lg:h-[510px] lg:w-[597px] lg:justify-between lg:gap-0">
+          <div className="flex min-w-0 flex-col gap-6 lg:h-[clamp(360px,35.5vw,510px)] lg:justify-between lg:gap-0 min-[1440px]:h-[510px] min-[1440px]:w-[597px]">
             <Reveal x={28}>
               <p className="max-w-[597px] text-base uppercase leading-[1.45] text-white lg:text-[27px]">
-                Результат, який ти відчуєш на рівні тіла, стану і життя
+                {results.summary}
               </p>
             </Reveal>
 
-            <div className="flex flex-col gap-6 lg:gap-8">
+            <div className="flex flex-col gap-4 lg:gap-8">
               {resultRows.map((row, rowIndex) => (
                 <Reveal key={rowIndex} delay={0.12 + rowIndex * 0.05}>
-                  <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-[83px] lg:gap-y-0">
+                  <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-[85px] lg:gap-y-0 min-[1440px]:gap-x-[83px]">
                     {row.map((item) => (
-                      <article key={item.title} className="flex w-full flex-col gap-[10px] lg:w-[257px]">
+                      <article key={item.title} className="flex w-full min-w-0 flex-col gap-[10px] min-[1440px]:w-[257px]">
                         <div className="flex items-center gap-[10px]">
                           <span className="mt-px h-2 w-2 shrink-0 rounded-full bg-[#8FAFC2]" />
-                          <h3 className="text-lg uppercase leading-[1.45] text-white lg:max-w-[217px] lg:text-[20px]">
+                          <h3 className="text-lg uppercase leading-[1.45] text-white lg:text-[20px] min-[1440px]:max-w-[217px]">
                             {item.title}
                           </h3>
                         </div>
-                        <p className="whitespace-pre-line pl-[18px] text-base leading-[1.45] text-white">
+                        <p className="pl-[18px] text-base leading-[1.45] text-white min-[1440px]:whitespace-pre-line">
                           {item.description}
                         </p>
                       </article>
@@ -81,5 +64,5 @@ export function ResultsSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

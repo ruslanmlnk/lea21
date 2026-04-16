@@ -1,82 +1,58 @@
-import { images } from "./data";
-import { Reveal, ResponsivePicture } from "./shared";
+import { LandingImage } from './shared'
+import { Reveal } from './shared-client'
 
-const stats = [
-  {
-    title: "СОТНІ КОНСУЛЬТАЦІЙ",
-    description: "глибока робота з жінками та успішні кейси",
-    align: "end",
-  },
-  {
-    title: "ПСИХОСОМАТИКА",
-    description: "і тілесно-орієнтована терапія",
-    align: "start",
-  },
-  {
-    title: "ЖІНОЧЕ ЗДОРОВ’Я",
-    description: "та практична психологія",
-    align: "end",
-  },
-  {
-    title: "ВЛАСНИЙ ШЛЯХ",
-    description: "досвід через апатію, виснаження і відновлення",
-    align: "start",
-  },
-] as const;
+import type { LandingPageContent } from './types'
 
-export function ExpertiseSection() {
+export function ExpertiseSection({ expertise }: { expertise: LandingPageContent['expertise'] }) {
+
   return (
     <section className="bg-[linear-gradient(0deg,rgba(143,175,194,0.5)_0%,#FFFFFF_100%)]">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-10 px-6 pb-10 pt-0 lg:gap-[70px] lg:px-[30px] lg:pb-[130px]">
-        <div className="flex flex-col gap-10 lg:gap-[50px]">
-          <div className="flex flex-col gap-10 lg:gap-[70px]">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 py-9 lg:gap-[70px] lg:px-[30px] lg:pb-[130px] lg:pt-0">
+        <div className="flex flex-col gap-6 lg:gap-[50px]">
+          <div className="flex flex-col gap-6 lg:gap-[70px]">
             <Reveal>
               <div className="w-full lg:max-w-[643px]">
                 <h2 className="text-[#1F445A]">
-                  <span className="font-display text-[34px] uppercase leading-[1.08] sm:text-[46px] lg:block lg:text-[64px] lg:leading-none">
-                    мій досвід і підхід
+                  <span className="font-display text-[24px] uppercase leading-[1.45] lg:block lg:text-[64px] lg:leading-none">
+                    {expertise.title}
                   </span>
-                  <span className="font-script text-[34px] leading-[1.08] sm:text-[46px] lg:block lg:text-[64px] lg:leading-none">
-                    у роботі з жінками
+                  <span className="font-script text-[36px] leading-[1.1] lg:block lg:text-[64px] lg:leading-none">
+                    {expertise.scriptTitle}
                   </span>
                 </h2>
               </div>
             </Reveal>
 
-            <div className="flex flex-col gap-6 lg:gap-[50px]">
+            <div className="flex flex-col gap-4 lg:gap-[50px]">
               <Reveal className="lg:ml-auto lg:max-w-[491px]" x={30}>
-                <p className="text-base leading-[1.45] text-[#1F445A]">
-                  Мене звати Лєна, я тілесний терапевт, жіночий ментор і автор методу «Дотик». За моїми плечима — сотні
-                  консультацій, глибока робота з жінками та сотні успішних кейсів.
-                </p>
+                <p className="text-base leading-[1.45] text-[#1F445A]">{expertise.description}</p>
               </Reveal>
 
               <Reveal className="lg:max-w-[598px]" delay={0.08}>
                 <p className="text-base uppercase leading-[1.45] text-[#1F445A] lg:text-[18px]">
-                  Я маю підтверджені знання у сфері психосоматики, тілесно-орієнтованої терапії, жіночого здоров’я та
-                  практичної психології. Але найцінніше — це мій власний шлях.
+                  {expertise.intro}
                 </p>
               </Reveal>
             </div>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[750px_531px] lg:items-center lg:justify-between">
-            <Reveal>
-              <ResponsivePicture
-                asset={images.aboutImage}
-                imgClassName="h-[412px] w-full object-cover lg:h-[562px] lg:w-[750px]"
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.95fr)] lg:items-center lg:justify-between lg:gap-[95px] min-[1440px]:grid-cols-[750px_531px]">
+            <Reveal className="min-w-0">
+              <LandingImage
+                asset={expertise.image}
+                imgClassName="h-[412px] w-full object-cover lg:h-[clamp(430px,39vw,562px)] min-[1440px]:h-[562px] min-[1440px]:w-[750px]"
               />
             </Reveal>
 
-            <div className="flex flex-col gap-8 lg:w-[531px] lg:gap-[50px]">
-              {stats.map((item, index) => (
-                <Reveal key={item.title} delay={0.08 + index * 0.05}>
+            <div className="flex min-w-0 flex-col gap-6 lg:gap-[clamp(24px,3.5vw,50px)] min-[1440px]:w-[531px] min-[1440px]:gap-[50px]">
+              {expertise.stats.map((item, index) => (
+                <Reveal key={`${item.title}-${index}`} delay={0.08 + index * 0.05}>
                   <div
                     className={`flex flex-col gap-[10px] ${
                       item.align === "end" ? "items-end text-right" : "items-start text-left"
                     }`}
                   >
-                    <h3 className="text-[30px] uppercase leading-[1.45] text-[#1F445A] sm:text-[38px] lg:text-[48px]">
+                    <h3 className="text-[30px] uppercase leading-[1.45] text-[#1F445A] sm:text-[38px] lg:text-[clamp(32px,3.3vw,48px)] min-[1440px]:text-[48px]">
                       {item.title}
                     </h3>
                     <p className="text-base leading-[1.45] text-[#1F445A]">{item.description}</p>
@@ -88,5 +64,5 @@ export function ExpertiseSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,0 +1,187 @@
+@import url("https://fonts.cdnfonts.com/css/google-sans");
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #1f445a;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Product Sans", "Google Sans", "Poppins", Arial, sans-serif;
+  overflow-x: clip;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.font-nav {
+  font-family: "Poppins", -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.font-script {
+  font-family: "Great Vibes", cursive;
+}
+
+.font-display {
+  font-family: "Playfair Display", serif;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@layer utilities {
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 34px, 0);
+      filter: blur(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes hero-image-in {
+    from {
+      opacity: 0;
+      transform: scale(1.035);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .hero-rise {
+    opacity: 0;
+    animation: hero-rise 980ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    will-change: opacity, transform, filter;
+  }
+
+  .hero-image-in {
+    opacity: 0;
+    transform: scale(1.035);
+    transition:
+      opacity 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1350ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .smooth-image {
+    opacity: 0;
+    transition: opacity 720ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity;
+  }
+
+  .smooth-image.hero-image-in {
+    transition:
+      opacity 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1350ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .smooth-image[data-loaded="true"] {
+    opacity: 1;
+  }
+
+  .hero-image-in[data-loaded="true"] {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .hero-delay-1 {
+    animation-delay: 90ms;
+    transition-delay: 90ms;
+  }
+
+  .hero-delay-2 {
+    animation-delay: 220ms;
+    transition-delay: 220ms;
+  }
+
+  .hero-delay-3 {
+    animation-delay: 360ms;
+    transition-delay: 360ms;
+  }
+
+  .hero-delay-4 {
+    animation-delay: 510ms;
+    transition-delay: 510ms;
+  }
+
+  .hero-delay-5 {
+    animation-delay: 650ms;
+    transition-delay: 650ms;
+  }
+
+  .hero-delay-6 {
+    animation-delay: 790ms;
+    transition-delay: 790ms;
+  }
+
+  .hero-delay-7 {
+    animation-delay: 930ms;
+    transition-delay: 930ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-rise,
+    .smooth-image,
+    .hero-image-in {
+      opacity: 1;
+      animation: none;
+      transition: none;
+      transform: none;
+      filter: none;
+      will-change: auto;
+    }
+  }
+}

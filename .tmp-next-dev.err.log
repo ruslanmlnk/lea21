@@ -1,9 +1,0 @@
-⚠ Port 3000 is in use by process 30816, using available port 3001 instead.
-⨯ Another next dev server is already running.
-
-- Local:        http://localhost:3000
-- PID:          30816
-- Dir:          C:\Users\Nitro\Desktop\Projects\lea21
-- Log:          .next\dev\logs\next-development.log
-
-Run taskkill /PID 30816 /F to stop it.

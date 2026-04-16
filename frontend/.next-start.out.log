@@ -1,4 +1,0 @@
-
-> frontend@1.0.0 start
-> cross-env NODE_OPTIONS=--no-deprecation next start --port 3000
-

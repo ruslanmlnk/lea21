@@ -1,44 +1,51 @@
-import { useState } from "react";
-import { navigation } from "./data";
+'use client'
 
-export function HeaderSection() {
+import { useState } from 'react'
+
+import { LogoMark } from './logo-mark'
+
+import type { LandingPageContent } from './types'
+
+export function HeaderSection({ header }: { header: LandingPageContent['header'] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const ctaLabel = "Записатись";
+  const { ctaLabel, logoText, navItems } = header;
   const openMenuLabel = "Відкрити меню";
   const closeMenuLabel = "Закрити меню";
 
   return (
     <header className="relative z-40 bg-white">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-[30px] py-5">
-        <a href="#home" className="font-logo text-[24px] leading-[1.45] uppercase text-[#1F445A] transition-opacity hover:opacity-75">
-          lea21
+      <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-6 py-6 lg:h-[75px] lg:px-[30px] lg:py-0">
+        <a
+          href="#home"
+          aria-label={logoText}
+          className="justify-self-start text-[#1F445A] transition-opacity hover:opacity-75"
+        >
+          <LogoMark className="h-[22px] w-auto lg:h-[25px]" />
         </a>
 
-        <div className="hidden items-center gap-[30px] lg:flex">
-          <a
-            href="#contact"
-            className="font-['Poppins'] text-[16px] leading-6 text-[#1F445A] underline underline-offset-[3px] transition-opacity hover:opacity-70"
-          >
-            {ctaLabel}
-          </a>
+        <nav className="font-nav hidden translate-y-px items-center gap-[30px] justify-self-center text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] lg:flex">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="transition-opacity hover:opacity-70"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
-          <nav className="flex items-center gap-[30px]">
-            {navigation.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="font-['Poppins'] text-[16px] leading-6 text-[#1F445A] transition-opacity hover:opacity-70"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
+        <a
+          href="#contact"
+          className="font-nav relative hidden translate-y-px justify-self-end pb-[5px] text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] transition-opacity hover:opacity-70 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-current lg:block"
+        >
+          {ctaLabel}
+        </a>
 
-        <div className="flex lg:hidden">
+        <div className="col-start-3 flex justify-self-end lg:hidden">
           <button
             type="button"
-            className="flex h-9 w-9 items-center justify-center bg-[#1F445A] text-white"
+            className="flex h-8 w-8 items-center justify-center bg-[#1F445A] text-white lg:h-9 lg:w-9"
             aria-label={mobileMenuOpen ? closeMenuLabel : openMenuLabel}
             onClick={() => setMobileMenuOpen((value) => !value)}
           >
@@ -54,11 +61,11 @@ export function HeaderSection() {
       {mobileMenuOpen ? (
         <div className="border-t border-[#D5E0E8] bg-white lg:hidden">
           <nav className="mx-auto flex max-w-[360px] flex-col px-6 py-5">
-            {navigation.map((item) => (
+            {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="font-['Poppins'] border-b border-[#D5E0E8] py-4 text-base text-[#1F445A]"
+                className="font-nav border-b border-[#D5E0E8] py-4 text-base text-[#1F445A]"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
@@ -66,7 +73,7 @@ export function HeaderSection() {
             ))}
             <a
               href="#contact"
-              className="font-['Poppins'] mt-4 bg-[#8FAFC2] px-5 py-3 text-center text-base text-white"
+              className="font-nav mt-4 bg-[#8FAFC2] px-5 py-3 text-center text-base text-white"
               onClick={() => setMobileMenuOpen(false)}
             >
               {ctaLabel}
@@ -75,5 +82,5 @@ export function HeaderSection() {
         </div>
       ) : null}
     </header>
-  );
+  )
 }

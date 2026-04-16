@@ -1,7 +1,50 @@
-import type { NextConfig } from "next";
+import { withPayload } from '@payloadcms/next/withPayload'
+import type { NextConfig } from 'next'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  devIndicators: false,
+  images: {
+    localPatterns: [
+      {
+        pathname: '/api/media/file/**',
+      },
+    ],
+    remotePatterns: [
+      {
+        hostname: 'api.builder.io',
+        protocol: 'https',
+      },
+      {
+        hostname: 'fonts.cdnfonts.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'fonts.googleapis.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'raw.githubusercontent.com',
+        protocol: 'https',
+      },
+    ],
+  },
+  webpack: (webpackConfig) => {
+    webpackConfig.resolve.extensionAlias = {
+      '.cjs': ['.cts', '.cjs'],
+      '.js': ['.ts', '.tsx', '.js', '.jsx'],
+      '.mjs': ['.mts', '.mjs'],
+    }
 
-export default nextConfig;
+    return webpackConfig
+  },
+  turbopack: {
+    root: path.resolve(dirname),
+  },
+}
+
+export default withPayload(nextConfig, { devBundleServerPackages: false })
