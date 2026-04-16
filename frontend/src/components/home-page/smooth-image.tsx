@@ -9,7 +9,7 @@ import {
 } from 'react'
 
 type SmoothImageProps = ComponentPropsWithoutRef<'img'> & {
-  reveal?: 'decode' | 'load'
+  reveal?: 'decode' | 'load' | 'none'
 }
 
 export function SmoothImage({
@@ -21,7 +21,7 @@ export function SmoothImage({
   ...props
 }: SmoothImageProps) {
   const imageRef = useRef<HTMLImageElement | null>(null)
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(reveal === 'none')
 
   const revealImage = (image: HTMLImageElement) => {
     const finish = () => {
@@ -39,6 +39,11 @@ export function SmoothImage({
   }
 
   useEffect(() => {
+    if (reveal === 'none') {
+      setLoaded(true)
+      return
+    }
+
     setLoaded(false)
 
     const image = imageRef.current
@@ -57,6 +62,12 @@ export function SmoothImage({
   }, [reveal, src])
 
   const handleLoad = (event: SyntheticEvent<HTMLImageElement>) => {
+    if (reveal === 'none') {
+      setLoaded(true)
+      onLoad?.(event)
+      return
+    }
+
     revealImage(event.currentTarget)
     onLoad?.(event)
   }

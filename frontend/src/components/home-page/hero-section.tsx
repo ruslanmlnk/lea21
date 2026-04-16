@@ -8,7 +8,7 @@ export function HeroSection({ hero }: { hero: LandingPageContent['hero'] }) {
 
   return (
     <section id="home" className="relative overflow-hidden bg-[#232A31]">
-      <BackgroundPicture asset={hero.backgroundImage} eager reveal="load" />
+      <BackgroundPicture asset={hero.backgroundImage} eager reveal="none" />
       <div className="absolute inset-0 bg-black/60" />
 
       <div className="relative mx-auto max-w-[1440px] lg:h-[clamp(680px,64.6vw,930px)] min-[1440px]:h-[930px]">
@@ -80,8 +80,8 @@ export function HeroSection({ hero }: { hero: LandingPageContent['hero'] }) {
           decoding="async"
           fetchPriority="high"
           draggable={false}
-          reveal="load"
-          className="hero-image-in hero-delay-2 h-[412px] w-full object-cover object-top lg:absolute lg:left-[clamp(318px,30.8vw,444px)] lg:top-0 lg:h-[clamp(680px,64.5vw,929px)] lg:w-[clamp(530px,51.7vw,745px)] lg:object-cover min-[1440px]:left-[444px] min-[1440px]:h-[929px] min-[1440px]:w-[745px]"
+          reveal="none"
+          className="hero-image-in h-[412px] w-full object-cover object-top lg:absolute lg:left-[clamp(318px,30.8vw,444px)] lg:top-0 lg:h-[clamp(680px,64.5vw,929px)] lg:w-[clamp(530px,51.7vw,745px)] lg:object-cover min-[1440px]:left-[444px] min-[1440px]:h-[929px] min-[1440px]:w-[745px]"
         />
       </div>
     </section>

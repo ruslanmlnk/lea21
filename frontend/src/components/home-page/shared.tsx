@@ -14,7 +14,7 @@ export function LandingImage({
   className?: string
   eager?: boolean
   imgClassName?: string
-  reveal?: 'decode' | 'load'
+  reveal?: 'decode' | 'load' | 'none'
 }) {
   return (
     <SmoothImage
@@ -37,7 +37,7 @@ export function BackgroundPicture({
 }: {
   asset: ImageAsset
   eager?: boolean
-  reveal?: 'decode' | 'load'
+  reveal?: 'decode' | 'load' | 'none'
 }) {
   return (
     <div className="absolute inset-0">
