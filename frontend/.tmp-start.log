@@ -1,0 +1,9 @@
+
+> frontend@1.0.0 start
+> cross-env NODE_OPTIONS=--no-deprecation next start --port 3006
+
+▲ Next.js 16.2.3
+- Local:         http://localhost:3006
+- Network:       http://192.168.0.221:3006
+✓ Ready in 433ms
+[05:28:44] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m

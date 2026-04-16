@@ -1,0 +1,26 @@
+
+> frontend@1.0.0 dev
+> cross-env NODE_OPTIONS=--no-deprecation next dev --port 3001
+
+▲ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.0.221:3001
+- Environments: .env
+✓ Ready in 889ms
+- Experiments (use with caution):
+  ⨯ turbopackServerFastRefresh
+
+[⣷] Pulling schema from database...
+[2K[1G[⣯] Pulling schema from database...
+[2K[1G[⣟] Pulling schema from database...
+[2K[1G[⡿] Pulling schema from database...
+[2K[1G[⢿] Pulling schema from database...
+[2K[1G[⣻] Pulling schema from database...
+[2K[1G[⣽] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[18:32:58] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+ GET /api/media?limit=5&depth=0&sort=createdAt 200 in 24.1s (next.js: 16.4s, application-code: 7.7s)
+ GET /api/globals/landing-page?depth=1 200 in 24.1s (next.js: 16.4s, application-code: 7.7s)
+ GET /api/media?limit=100&depth=0 200 in 2.4s (next.js: 1766ms, application-code: 599ms)
+ GET /api/globals/landing-page?depth=1 200 in 2.6s (next.js: 2.1s, application-code: 507ms)
+[?25h

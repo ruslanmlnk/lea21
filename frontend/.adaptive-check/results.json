@@ -1,0 +1,237 @@
+[
+  {
+    "viewport": {
+      "name": "mobile-360",
+      "width": 360,
+      "height": 900
+    },
+    "data": {
+      "title": "LEA21 | Проєкт «Дотик»",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "mainScrollWidth": 360,
+      "hasHorizontalOverflow": false,
+      "hasReviewsHeading": false,
+      "buttons": [
+        "Модуль 1 — робота з нервовою системою",
+        "Модуль 2 — робота з тілом та емоціями",
+        "Модуль 3 — робота зі станом",
+        "Додаткові матеріали",
+        "Надіслати"
+      ],
+      "overflowing": [
+        {
+          "tag": "DIV",
+          "className": "shrink-0 snap-start",
+          "right": 484,
+          "left": 344,
+          "width": 140
+        },
+        {
+          "tag": "DIV",
+          "className": "flex shrink-0 items-center justify-center bg-[#8FAFC2] p-5 lg:p-8",
+          "right": 484,
+          "left": 344,
+          "width": 140
+        },
+        {
+          "tag": "PICTURE",
+          "className": "",
+          "right": 464,
+          "left": 364,
+          "width": 100
+        },
+        {
+          "tag": "IMG",
+          "className": "h-[140px] w-[100px] border border-[#D5E0E8] object-cover lg:h-[210px] lg:w-[150px]",
+          "right": 464,
+          "left": 364,
+          "width": 100
+        },
+        {
+          "tag": "DIV",
+          "className": "shrink-0 snap-start",
+          "right": 644,
+          "left": 504,
+          "width": 140
+        },
+        {
+          "tag": "DIV",
+          "className": "flex shrink-0 items-center justify-center bg-[#8FAFC2] p-5 lg:p-8",
+          "right": 644,
+          "left": 504,
+          "width": 140
+        },
+        {
+          "tag": "PICTURE",
+          "className": "",
+          "right": 624,
+          "left": 524,
+          "width": 100
+        },
+        {
+          "tag": "IMG",
+          "className": "h-[140px] w-[100px] border border-[#D5E0E8] object-cover lg:h-[210px] lg:w-[150px]",
+          "right": 624,
+          "left": 524,
+          "width": 100
+        }
+      ]
+    }
+  },
+  {
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024
+    },
+    "data": {
+      "title": "LEA21 | Проєкт «Дотик»",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "mainScrollWidth": 768,
+      "hasHorizontalOverflow": false,
+      "hasReviewsHeading": false,
+      "buttons": [
+        "Модуль 1 — робота з нервовою системою",
+        "Модуль 2 — робота з тілом та емоціями",
+        "Модуль 3 — робота зі станом",
+        "Додаткові матеріали",
+        "Надіслати"
+      ],
+      "overflowing": []
+    }
+  },
+  {
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 1400
+    },
+    "data": {
+      "title": "LEA21 | Проєкт «Дотик»",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "mainScrollWidth": 1440,
+      "hasHorizontalOverflow": false,
+      "hasReviewsHeading": false,
+      "buttons": [
+        "Модуль 1 — робота з нервовою системою",
+        "Модуль 2 — робота з тілом та емоціями",
+        "Модуль 3 — робота зі станом",
+        "Додаткові матеріали",
+        "Надіслати"
+      ],
+      "overflowing": [
+        {
+          "tag": "DIV",
+          "className": "snap-start shrink-0",
+          "right": 1882,
+          "left": 1449,
+          "width": 433
+        },
+        {
+          "tag": "ARTICLE",
+          "className": "flex h-[347px] w-[312px] shrink-0 flex-col justify-between bg-white px-6 py-8 text-center lg:w-[433px] lg:px-[38px] lg:py-[38px]",
+          "right": 1882,
+          "left": 1449,
+          "width": 433
+        },
+        {
+          "tag": "P",
+          "className": "text-sm leading-[1.45] text-[#1F445A]",
+          "right": 1844,
+          "left": 1487,
+          "width": 357
+        },
+        {
+          "tag": "DIV",
+          "className": "mx-auto mt-6",
+          "right": 1796.53125,
+          "left": 1534.453125,
+          "width": 262.078125
+        },
+        {
+          "tag": "DIV",
+          "className": "flex items-center justify-center gap-4",
+          "right": 1796.53125,
+          "left": 1534.453125,
+          "width": 262.078125
+        },
+        {
+          "tag": "DIV",
+          "className": "flex items-center gap-4 border-r border-[#D5E0E8] pr-6",
+          "right": 1756.53125,
+          "left": 1534.453125,
+          "width": 222.078125
+        },
+        {
+          "tag": "IMG",
+          "className": "h-12 w-12 rounded-full object-cover",
+          "right": 1582.453125,
+          "left": 1534.453125,
+          "width": 48
+        },
+        {
+          "tag": "SPAN",
+          "className": "text-base uppercase leading-[1.45] text-[#8FAFC2]",
+          "right": 1731.53125,
+          "left": 1598.453125,
+          "width": 133.078125
+        },
+        {
+          "tag": "svg",
+          "className": "",
+          "right": 1796.53125,
+          "left": 1772.53125,
+          "width": 24
+        },
+        {
+          "tag": "path",
+          "className": "",
+          "right": 1794.52978515625,
+          "left": 1774.52978515625,
+          "width": 20
+        },
+        {
+          "tag": "path",
+          "className": "",
+          "right": 1788.5751953125,
+          "left": 1780.5751953125,
+          "width": 8
+        },
+        {
+          "tag": "path",
+          "className": "",
+          "right": 1790.043701171875,
+          "left": 1790.033203125,
+          "width": 0.010498046875
+        },
+        {
+          "tag": "DIV",
+          "className": "snap-start shrink-0",
+          "right": 2355,
+          "left": 1922,
+          "width": 433
+        },
+        {
+          "tag": "ARTICLE",
+          "className": "flex h-[347px] w-[312px] shrink-0 flex-col justify-between bg-white px-6 py-8 text-center lg:w-[433px] lg:px-[38px] lg:py-[38px]",
+          "right": 2355,
+          "left": 1922,
+          "width": 433
+        },
+        {
+          "tag": "P",
+          "className": "text-sm leading-[1.45] text-[#1F445A]",
+          "right": 2317,
+          "left": 1960,
+          "width": 357
+        }
+      ]
+    }
+  }
+]
