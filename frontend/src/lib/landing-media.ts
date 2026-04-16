@@ -228,6 +228,14 @@ function resolveMediaUrl(value: unknown, fallback: string) {
       return value.seedKey
     }
 
+    if (isMediaDoc(value) && typeof value.filename === 'string' && value.filename.length > 0) {
+      const fallbackFilename = path.posix.basename(fallback)
+
+      if (value.filename === fallbackFilename) {
+        return fallback
+      }
+    }
+
     if (typeof value === 'string' && value.startsWith('/api/media/file/')) {
       return fallback
     }
@@ -270,6 +278,14 @@ function resolveSimpleMediaField(fieldName: string, incoming: unknown, fallback:
   }
 
   return incoming
+}
+
+function shouldResolveSimpleMediaField(fieldName: string, fallback: unknown) {
+  if (fieldName === 'video') {
+    return true
+  }
+
+  return typeof fallback === 'string'
 }
 
 function resolveMediaAlt(value: unknown, fallback: string) {
@@ -442,7 +458,7 @@ function resolveLandingContent<T>(fallback: T, incoming?: unknown): T {
       continue
     }
 
-    if (simpleMediaFieldNames.has(key)) {
+    if (simpleMediaFieldNames.has(key) && shouldResolveSimpleMediaField(key, fallbackValue)) {
       result[key] = resolveSimpleMediaField(key, incomingObject[key], fallbackValue)
       continue
     }
