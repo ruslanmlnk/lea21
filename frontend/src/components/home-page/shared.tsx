@@ -6,13 +6,15 @@ import type { Benefit, ImageAsset, TextReviewItem } from './types'
 export function LandingImage({
   asset,
   className,
-  imgClassName,
   eager = false,
+  imgClassName,
+  reveal = 'decode',
 }: {
   asset: ImageAsset
   className?: string
-  imgClassName?: string
   eager?: boolean
+  imgClassName?: string
+  reveal?: 'decode' | 'load'
 }) {
   return (
     <SmoothImage
@@ -20,17 +22,26 @@ export function LandingImage({
       src={asset.url}
       alt={asset.alt}
       loading={eager ? 'eager' : 'lazy'}
-      decoding={eager ? 'sync' : 'async'}
+      decoding="async"
       fetchPriority={eager ? 'high' : 'auto'}
       draggable={false}
+      reveal={reveal}
     />
   )
 }
 
-export function BackgroundPicture({ asset }: { asset: ImageAsset }) {
+export function BackgroundPicture({
+  asset,
+  eager = false,
+  reveal = 'decode',
+}: {
+  asset: ImageAsset
+  eager?: boolean
+  reveal?: 'decode' | 'load'
+}) {
   return (
     <div className="absolute inset-0">
-      <LandingImage asset={asset} eager imgClassName="h-full w-full object-cover" />
+      <LandingImage asset={asset} eager={eager} imgClassName="h-full w-full object-cover" reveal={reveal} />
     </div>
   )
 }

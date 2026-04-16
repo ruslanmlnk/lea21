@@ -8,12 +8,15 @@ import {
   type SyntheticEvent,
 } from 'react'
 
-type SmoothImageProps = ComponentPropsWithoutRef<'img'>
+type SmoothImageProps = ComponentPropsWithoutRef<'img'> & {
+  reveal?: 'decode' | 'load'
+}
 
 export function SmoothImage({
   className,
   onError,
   onLoad,
+  reveal = 'decode',
   src,
   ...props
 }: SmoothImageProps) {
@@ -27,7 +30,7 @@ export function SmoothImage({
       })
     }
 
-    if (typeof image.decode === 'function') {
+    if (reveal === 'decode' && typeof image.decode === 'function') {
       void image.decode().then(finish, finish)
       return
     }
@@ -44,17 +47,6 @@ export function SmoothImage({
       return
     }
 
-    const handleNativeLoad = () => {
-      revealImage(image)
-    }
-
-    const handleNativeError = () => {
-      setLoaded(true)
-    }
-
-    image.addEventListener('load', handleNativeLoad)
-    image.addEventListener('error', handleNativeError)
-
     if (image.complete) {
       if (image.naturalWidth > 0) {
         revealImage(image)
@@ -62,12 +54,7 @@ export function SmoothImage({
         setLoaded(true)
       }
     }
-
-    return () => {
-      image.removeEventListener('load', handleNativeLoad)
-      image.removeEventListener('error', handleNativeError)
-    }
-  }, [src])
+  }, [reveal, src])
 
   const handleLoad = (event: SyntheticEvent<HTMLImageElement>) => {
     revealImage(event.currentTarget)
