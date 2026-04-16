@@ -6,7 +6,11 @@ import { defaultLandingPageContent } from '@/components/home-page/data'
 import type { ImageAsset, LandingPageContent } from '@/components/home-page/types'
 
 type MediaDoc = {
+  filename?: null | string
+  id?: number | string
   alt?: null | string
+  mimeType?: null | string
+  seedKey?: null | string
   url?: null | string
 }
 
@@ -62,6 +66,51 @@ function getReviewMediaAlt(args: {
 
 function localUrlToFilePath(assetPath: string) {
   return path.resolve(process.cwd(), 'public', assetPath.replace(/^\//, '').replaceAll('/', path.sep))
+}
+
+function getLegacySourcePaths(sourcePath: string) {
+  const candidates = [sourcePath]
+
+  if (sourcePath.endsWith('.webp')) {
+    candidates.push(sourcePath.replace(/\.webp$/i, '.png'))
+  }
+
+  return candidates
+}
+
+async function findExistingMediaBySeedKeys(payload: Payload, seedKeys: string[]) {
+  for (const seedKey of seedKeys) {
+    const existingMedia = await payload.find({
+      collection: 'media',
+      depth: 0,
+      limit: 1,
+      overrideAccess: true,
+      pagination: false,
+      where: {
+        seedKey: {
+          equals: seedKey,
+        },
+      },
+    })
+
+    if (existingMedia.docs[0]) {
+      return existingMedia.docs[0] as MediaDoc
+    }
+  }
+
+  return null
+}
+
+function shouldReplaceMediaFile(existingMedia: MediaDoc, entry: MediaSeedEntry) {
+  if (existingMedia.seedKey !== entry.sourcePath) {
+    return true
+  }
+
+  if (existingMedia.mimeType !== 'image/webp') {
+    return true
+  }
+
+  return !existingMedia.filename?.toLowerCase().endsWith('.webp')
 }
 
 export function stripLandingMediaFields(value: unknown): unknown {
@@ -397,22 +446,26 @@ export async function ensureLandingMedia(payload: Payload) {
       continue
     }
 
-    const existingMedia = await payload.find({
-      collection: 'media',
-      depth: 0,
-      limit: 1,
-      overrideAccess: true,
-      pagination: false,
-      where: {
-        seedKey: {
-          equals: entry.sourcePath,
-        },
-      },
-    })
+    const existingMedia = await findExistingMediaBySeedKeys(payload, getLegacySourcePaths(entry.sourcePath))
 
-    if (existingMedia.docs[0]?.id != null) {
-      sourceMediaIds.set(entry.sourcePath, existingMedia.docs[0].id)
-      mediaIds.set(entry.key, existingMedia.docs[0].id)
+    if (existingMedia?.id != null) {
+      const syncedMedia = shouldReplaceMediaFile(existingMedia, entry) || existingMedia.alt !== entry.alt
+        ? await payload.update({
+            collection: 'media',
+            data: {
+              alt: entry.alt,
+              seedKey: entry.sourcePath,
+            },
+            depth: 0,
+            filePath: shouldReplaceMediaFile(existingMedia, entry) ? entry.filePath : undefined,
+            id: existingMedia.id,
+            overwriteExistingFiles: true,
+            overrideAccess: true,
+          })
+        : existingMedia
+
+      sourceMediaIds.set(entry.sourcePath, syncedMedia.id as number | string)
+      mediaIds.set(entry.key, syncedMedia.id as number | string)
       continue
     }
 
