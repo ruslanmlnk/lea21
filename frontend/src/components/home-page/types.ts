@@ -54,7 +54,7 @@ export type TextReviewItem = {
 
 export type VideoReviewItem = {
   blockType: 'videoReview'
-  video?: null | string
+  video: null | string
   image: string
   avatar: string
   name: string

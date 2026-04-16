@@ -168,6 +168,10 @@ function buildLandingPageMediaSeed(
 }
 
 function resolveMediaUrl(value: unknown, fallback: string) {
+  if (typeof value === 'string' && value.length > 0) {
+    return value
+  }
+
   if (isMediaDoc(value) && typeof value.url === 'string' && value.url.length > 0) {
     return value.url
   }
@@ -177,6 +181,24 @@ function resolveMediaUrl(value: unknown, fallback: string) {
   }
 
   return fallback
+}
+
+function resolveSimpleMediaField(fieldName: string, incoming: unknown, fallback: unknown) {
+  if (fieldName === 'video') {
+    if (incoming == null) {
+      return null
+    }
+
+    const resolved = resolveMediaUrl(incoming, typeof fallback === 'string' ? fallback : '')
+
+    return resolved.length > 0 ? resolved : null
+  }
+
+  if (typeof fallback === 'string') {
+    return resolveMediaUrl(incoming, fallback)
+  }
+
+  return incoming
 }
 
 function resolveMediaAlt(value: unknown, fallback: string) {
@@ -349,11 +371,8 @@ function resolveLandingContent<T>(fallback: T, incoming?: unknown): T {
       continue
     }
 
-    if (simpleMediaFieldNames.has(key) && typeof fallbackValue === 'string') {
-      result[key] = resolveMediaUrl(
-        incomingObject[key],
-        fallbackValue,
-      )
+    if (simpleMediaFieldNames.has(key)) {
+      result[key] = resolveSimpleMediaField(key, incomingObject[key], fallbackValue)
       continue
     }
 

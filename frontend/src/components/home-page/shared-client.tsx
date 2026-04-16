@@ -233,7 +233,8 @@ function VideoReviewPlayBadge() {
 export function VideoReviewCard({ item }: { item: VideoReviewItem }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const canPlayVideo = Boolean(item.video)
+  const videoUrl = item.video
+  const canPlayVideo = Boolean(videoUrl)
 
   useEffect(() => {
     if (!isPlaying || !videoRef.current) {
@@ -248,7 +249,7 @@ export function VideoReviewCard({ item }: { item: VideoReviewItem }) {
       <div className="absolute inset-x-0 top-[154px] h-[138px] bg-white shadow-[0_20px_50px_rgba(31,68,90,0.12)] lg:top-[185px] lg:h-[162px]" />
 
       <div className="absolute inset-x-[18px] top-0 z-10 overflow-hidden shadow-[0_22px_54px_rgba(31,68,90,0.2)] lg:inset-x-[40px]">
-        {isPlaying && item.video ? (
+        {isPlaying && videoUrl ? (
           <video
             ref={videoRef}
             className="h-[186px] w-full object-cover lg:h-[222px]"
@@ -256,8 +257,9 @@ export function VideoReviewCard({ item }: { item: VideoReviewItem }) {
             playsInline
             poster={item.image}
             preload="metadata"
+            autoPlay
           >
-            <source src={item.video} />
+            <source src={videoUrl} />
           </video>
         ) : (
           <div className="relative">

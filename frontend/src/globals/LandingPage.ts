@@ -408,11 +408,12 @@ export const LandingPage: GlobalConfig = {
                       fields: [
                         {
                           name: 'video',
-                          label: 'Відео',
+                          label: 'Відеофайл',
                           relationTo: 'media',
                           type: 'upload',
                           admin: {
-                            description: 'Завантаж відеофайл для відгуку. Підтримуються звичайні media uploads.',
+                            description:
+                              'Завантаж реальне відео для відгуку. Підходять mp4 / mov / webm, і на фронті воно відкриється після кліку по картці.',
                           },
                         },
                         {

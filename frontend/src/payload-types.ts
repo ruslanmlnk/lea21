@@ -489,7 +489,7 @@ export interface LandingPage {
       | (
           | {
               /**
-               * Завантаж відеофайл для відгуку. Підтримуються звичайні media uploads.
+               * Завантаж реальне відео для відгуку. Підходять mp4 / mov / webm, і на фронті воно відкриється після кліку по картці.
                */
               video?: (number | null) | Media;
               image: number | Media;

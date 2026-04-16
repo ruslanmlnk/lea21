@@ -22,5 +22,7 @@ export const Media: CollectionConfig = {
       unique: true,
     },
   ],
-  upload: true,
+  upload: {
+    mimeTypes: ['image/*', 'video/*'],
+  },
 }

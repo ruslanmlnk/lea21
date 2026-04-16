@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { LogoMark } from './logo-mark'
+
 import type { LandingPageContent } from './types'
 
 export function HeaderSection({ header }: { header: LandingPageContent['header'] }) {
@@ -15,9 +17,10 @@ export function HeaderSection({ header }: { header: LandingPageContent['header']
       <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-6 py-6 lg:h-[75px] lg:px-[30px] lg:py-0">
         <a
           href="#home"
-          className="font-logo justify-self-start text-[23px] font-normal leading-[1.45] uppercase text-[#1F445A] transition-opacity hover:opacity-75"
+          aria-label={logoText}
+          className="justify-self-start text-[#1F445A] transition-opacity hover:opacity-75"
         >
-          {logoText}
+          <LogoMark className="h-[22px] w-auto lg:h-[25px]" />
         </a>
 
         <nav className="font-nav hidden translate-y-px items-center gap-[30px] justify-self-center text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] lg:flex">

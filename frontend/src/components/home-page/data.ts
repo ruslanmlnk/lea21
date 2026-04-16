@@ -237,7 +237,7 @@ export const defaultLandingPageContent: LandingPageContent = {
     items: [
       {
         blockType: 'videoReview',
-        video: undefined,
+        video: null,
         image:
           '/landing/reviews-videoItems-0-image.png',
         avatar:
@@ -246,7 +246,7 @@ export const defaultLandingPageContent: LandingPageContent = {
       },
       {
         blockType: 'videoReview',
-        video: undefined,
+        video: null,
         image:
           '/landing/reviews-videoItems-0-image.png',
         avatar:
@@ -255,7 +255,7 @@ export const defaultLandingPageContent: LandingPageContent = {
       },
       {
         blockType: 'videoReview',
-        video: undefined,
+        video: null,
         image:
           '/landing/reviews-videoItems-0-image.png',
         avatar:
