@@ -3,11 +3,15 @@ import 'dotenv/config'
 import fs from 'fs/promises'
 import path from 'path'
 
-import { getPayload } from 'payload'
+import { Client } from 'pg'
 import sharp from 'sharp'
 
-import { buildLandingPageGlobalSeed, ensureLandingMedia, normalizeLandingPageCmsValue, stripLandingMediaFields } from '../src/lib/landing-media'
-import { mergeWithDefaults } from '../src/lib/merge-with-defaults'
+type LandingMediaRow = {
+  filename: string | null
+  id: number
+  mime_type: string | null
+  seed_key: string | null
+}
 
 async function convertLandingAssetsToWebp() {
   const landingDir = path.resolve(process.cwd(), 'public', 'landing')
@@ -24,60 +28,95 @@ async function convertLandingAssetsToWebp() {
         quality: 84,
       })
       .toFile(outputPath)
+
+    await fs.unlink(inputPath)
   }
 
-  return pngFileNames
+  return pngFileNames.length
 }
 
-async function removeLegacyPngFiles(fileNames: string[]) {
-  const landingDir = path.resolve(process.cwd(), 'public', 'landing')
+async function syncLandingMediaRowsToWebp(client: Client) {
+  const { rows } = await client.query<LandingMediaRow>(`
+    select id, seed_key, filename, mime_type
+    from media
+    where seed_key like '/landing/%'
+      and mime_type like 'image/%'
+    order by id
+  `)
 
-  await Promise.all(
-    fileNames.map(async (fileName) => {
-      const filePath = path.join(landingDir, fileName)
+  let syncedCount = 0
 
-      if (await fs.stat(filePath).then(() => true, () => false)) {
-        await fs.unlink(filePath)
+  for (const row of rows) {
+    if (!row.seed_key) {
+      continue
+    }
+
+    const targetSeedKey = row.seed_key.replace(/\.png$/i, '.webp')
+    const targetFileName = path.basename(targetSeedKey)
+    const publicFilePath = path.resolve(process.cwd(), 'public', targetSeedKey.replace(/^\//, '').replaceAll('/', path.sep))
+
+    const publicFileExists = await fs.stat(publicFilePath).then(() => true, () => false)
+
+    if (!publicFileExists) {
+      continue
+    }
+
+    const outputFilePath = path.resolve(process.cwd(), 'media', targetFileName)
+    const fileStats = await fs.stat(publicFilePath)
+    const metadata = await sharp(publicFilePath).metadata()
+
+    await fs.copyFile(publicFilePath, outputFilePath)
+
+    await client.query(
+      `
+        update media
+        set seed_key = $2,
+            filename = $3,
+            mime_type = 'image/webp',
+            filesize = $4,
+            width = $5,
+            height = $6,
+            url = $7,
+            updated_at = now()
+        where id = $1
+      `,
+      [
+        row.id,
+        targetSeedKey,
+        targetFileName,
+        fileStats.size,
+        metadata.width ?? null,
+        metadata.height ?? null,
+        `/api/media/file/${targetFileName}`,
+      ],
+    )
+
+    if (row.filename && row.filename !== targetFileName) {
+      const previousFilePath = path.resolve(process.cwd(), 'media', row.filename)
+      const previousFileExists = await fs.stat(previousFilePath).then(() => true, () => false)
+
+      if (previousFileExists) {
+        await fs.unlink(previousFilePath)
       }
-    }),
-  )
+    }
+
+    syncedCount += 1
+  }
+
+  return syncedCount
 }
 
 async function main() {
-  process.env.PAYLOAD_MIGRATING = 'true'
+  const convertedCount = await convertLandingAssetsToWebp()
+  const client = new Client({ connectionString: process.env.DATABASE_URL })
 
-  const convertedFiles = await convertLandingAssetsToWebp()
-  const { default: config } = await import('../src/payload.config')
-  const payload = await getPayload({ config })
+  await client.connect()
 
   try {
-    const mediaIds = await ensureLandingMedia(payload)
-    const defaultLandingPageSeed = buildLandingPageGlobalSeed(mediaIds)
-    const existingLandingPage = await payload.findGlobal({
-      depth: 0,
-      overrideAccess: true,
-      slug: 'landing-page',
-    })
-
-    const completeLandingPage = mergeWithDefaults(
-      defaultLandingPageSeed,
-      normalizeLandingPageCmsValue(
-        stripLandingMediaFields(existingLandingPage) as Record<string, unknown>,
-      ) as Record<string, unknown>,
-    )
-
-    await payload.updateGlobal({
-      data: completeLandingPage,
-      depth: 0,
-      overrideAccess: true,
-      slug: 'landing-page',
-    })
-
-    await removeLegacyPngFiles(convertedFiles)
-
-    console.log(`Converted ${convertedFiles.length} landing images to webp and synced media records.`)
+    const syncedCount = await syncLandingMediaRowsToWebp(client)
+    console.log(`Converted ${convertedCount} public landing PNG files and synced ${syncedCount} media records to webp.`)
   } finally {
-    await payload.destroy()
+    await client.end()
   }
 }
 
