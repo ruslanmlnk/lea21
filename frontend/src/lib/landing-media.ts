@@ -28,7 +28,13 @@ function isLocalMediaPath(value: unknown): value is string {
 }
 
 function isMediaDoc(value: unknown): value is MediaDoc {
-  return Boolean(value) && typeof value === 'object' && ('url' in (value as Record<string, unknown>) || 'alt' in (value as Record<string, unknown>))
+  return Boolean(value)
+    && typeof value === 'object'
+    && (
+      'url' in (value as Record<string, unknown>)
+      || 'alt' in (value as Record<string, unknown>)
+      || 'seedKey' in (value as Record<string, unknown>)
+    )
 }
 
 function isImageAsset(value: unknown): value is ImageAsset {
@@ -217,12 +223,28 @@ function buildLandingPageMediaSeed(
 }
 
 function resolveMediaUrl(value: unknown, fallback: string) {
+  if (typeof fallback === 'string' && isLocalMediaPath(fallback)) {
+    if (isMediaDoc(value) && isLocalMediaPath(value.seedKey)) {
+      return value.seedKey
+    }
+
+    if (typeof value === 'string' && value.startsWith('/api/media/file/')) {
+      return fallback
+    }
+  }
+
   if (typeof value === 'string' && value.length > 0) {
     return value
   }
 
-  if (isMediaDoc(value) && typeof value.url === 'string' && value.url.length > 0) {
-    return value.url
+  if (isMediaDoc(value)) {
+    if (isLocalMediaPath(value.seedKey)) {
+      return value.seedKey
+    }
+
+    if (typeof value.url === 'string' && value.url.length > 0) {
+      return value.url
+    }
   }
 
   if (isLocalMediaPath(value)) {
