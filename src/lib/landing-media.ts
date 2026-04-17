@@ -22,6 +22,7 @@ type MediaSeedEntry = {
 }
 
 const simpleMediaFieldNames = new Set(['avatar', 'image', 'video'])
+const passthroughStringFields = new Set(['instagramUrl'])
 
 function isLocalMediaPath(value: unknown): value is string {
   return typeof value === 'string' && value.startsWith('/landing/')
@@ -464,6 +465,12 @@ function resolveLandingContent<T>(fallback: T, incoming?: unknown): T {
     }
 
     result[key] = resolveLandingContent(fallbackValue, incomingObject[key])
+  }
+
+  for (const key of passthroughStringFields) {
+    if (typeof incomingObject[key] === 'string') {
+      result[key] = incomingObject[key]
+    }
   }
 
   return result as T

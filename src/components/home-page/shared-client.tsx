@@ -298,7 +298,7 @@ export function VideoReviewCard({ item }: { item: VideoReviewItem }) {
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-10 flex min-h-[138px] items-end justify-center px-4 pb-6 lg:min-h-[162px] lg:px-[38px] lg:pb-[38px]">
-        <SocialBadge avatar={item.avatar} name={item.name} />
+        <SocialBadge avatar={item.avatar} name={item.name} instagramUrl={item.instagramUrl} />
       </div>
     </article>
   )

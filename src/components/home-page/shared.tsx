@@ -174,30 +174,50 @@ export function CertificateCard({ asset }: { asset: ImageAsset }) {
   )
 }
 
-export function SocialBadge({ avatar, name }: { avatar: string; name: string }) {
+export function SocialBadge({
+  avatar,
+  name,
+  instagramUrl,
+}: {
+  avatar: string
+  name: string
+  instagramUrl?: string
+}) {
+  const hasInstagramUrl = typeof instagramUrl === 'string' && instagramUrl.trim().length > 0
+
   return (
     <div className="flex items-center justify-center gap-4">
-      <div className="flex items-center gap-4 border-r border-[#D5E0E8] pr-6">
+      <div className={`flex items-center gap-4 ${hasInstagramUrl ? 'border-r border-[#D5E0E8] pr-6' : ''}`}>
         <SmoothImage src={avatar} alt={name} className="h-12 w-12 rounded-full object-cover" loading="lazy" decoding="async" draggable={false} />
         <span className="text-base uppercase leading-[1.45] text-[#8FAFC2]">{name}</span>
       </div>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path
-          d="M16.9985 2.00098H6.99854C4.23711 2.00098 1.99854 4.23955 1.99854 7.00098V17.001C1.99854 19.7624 4.23711 22.001 6.99854 22.001H16.9985C19.76 22.001 21.9985 19.7624 21.9985 17.001V7.00098C21.9985 4.23955 19.76 2.00098 16.9985 2.00098Z"
-          stroke="#8FAFC2"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M16.0007 11.3703C16.1241 12.2025 15.9819 13.0525 15.5944 13.7993C15.2069 14.5461 14.5938 15.1517 13.8423 15.53C13.0908 15.9082 12.2391 16.0399 11.4085 15.9062C10.5778 15.7726 9.81044 15.3804 9.21552 14.7855C8.6206 14.1905 8.22842 13.4232 8.09475 12.5925C7.96109 11.7619 8.09275 10.9102 8.47101 10.1587C8.84927 9.40716 9.45487 8.79404 10.2017 8.40654C10.9485 8.01904 11.7984 7.87689 12.6307 8.0003C13.4796 8.12619 14.2655 8.52176 14.8724 9.12861C15.4792 9.73545 15.8748 10.5214 16.0007 11.3703Z"
-          stroke="#8FAFC2"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path d="M17.502 6.50098H17.5124" stroke="#8FAFC2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      {hasInstagramUrl ? (
+        <a
+          href={instagramUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Instagram ${name}`}
+          className="text-[#8FAFC2] transition-opacity duration-300 hover:opacity-70"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              d="M16.9985 2.00098H6.99854C4.23711 2.00098 1.99854 4.23955 1.99854 7.00098V17.001C1.99854 19.7624 4.23711 22.001 6.99854 22.001H16.9985C19.76 22.001 21.9985 19.7624 21.9985 17.001V7.00098C21.9985 4.23955 19.76 2.00098 16.9985 2.00098Z"
+              stroke="#8FAFC2"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M16.0007 11.3703C16.1241 12.2025 15.9819 13.0525 15.5944 13.7993C15.2069 14.5461 14.5938 15.1517 13.8423 15.53C13.0908 15.9082 12.2391 16.0399 11.4085 15.9062C10.5778 15.7726 9.81044 15.3804 9.21552 14.7855C8.6206 14.1905 8.22842 13.4232 8.09475 12.5925C7.96109 11.7619 8.09275 10.9102 8.47101 10.1587C8.84927 9.40716 9.45487 8.79404 10.2017 8.40654C10.9485 8.01904 11.7984 7.87689 12.6307 8.0003C13.4796 8.12619 14.2655 8.52176 14.8724 9.12861C15.4792 9.73545 15.8748 10.5214 16.0007 11.3703Z"
+              stroke="#8FAFC2"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M17.502 6.50098H17.5124" stroke="#8FAFC2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+      ) : null}
     </div>
   )
 }
@@ -207,7 +227,7 @@ export function TextReviewCard({ item }: { item: TextReviewItem }) {
     <article className="flex h-full w-full flex-col justify-between bg-white px-6 py-8 text-center lg:min-h-[347px] lg:w-[433px] lg:px-[38px] lg:py-[38px]">
       <p className="text-sm leading-[1.45] text-[#1F445A]">{item.text}</p>
       <div className="mx-auto mt-6">
-        <SocialBadge avatar={item.avatar} name={item.name} />
+        <SocialBadge avatar={item.avatar} name={item.name} instagramUrl={item.instagramUrl} />
       </div>
     </article>
   )

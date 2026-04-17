@@ -50,6 +50,7 @@ export type TextReviewItem = {
   text: string
   avatar: string
   name: string
+  instagramUrl?: string
 }
 
 export type VideoReviewItem = {
@@ -58,6 +59,7 @@ export type VideoReviewItem = {
   image: string
   avatar: string
   name: string
+  instagramUrl?: string
 }
 
 export type ReviewItem = TextReviewItem | VideoReviewItem

@@ -28,6 +28,15 @@ const linkFields: Field[] = [
   },
 ]
 
+const instagramUrlField: Field = {
+  name: 'instagramUrl',
+  label: 'Посилання на Instagram',
+  type: 'text',
+  admin: {
+    description: 'Необов\'язково. Якщо URL заданий, іконка Instagram з\'явиться в картці відгуку.',
+  },
+}
+
 const collapsedArrayAdmin = {
   initCollapsed: true,
 }
@@ -431,6 +440,7 @@ export const LandingPage: GlobalConfig = {
                           type: 'upload',
                         },
                         { name: 'name', label: 'Ім’я', required: true, type: 'text' },
+                        instagramUrlField,
                       ],
                     },
                     {
@@ -454,6 +464,7 @@ export const LandingPage: GlobalConfig = {
                           type: 'upload',
                         },
                         { name: 'name', label: 'Ім’я', required: true, type: 'text' },
+                        instagramUrlField,
                       ],
                     },
                   ],
@@ -482,6 +493,7 @@ export const LandingPage: GlobalConfig = {
                       type: 'upload',
                     },
                     { name: 'name', label: 'Ім’я', required: true, type: 'text' },
+                    instagramUrlField,
                   ],
                 },
                 {
@@ -502,6 +514,7 @@ export const LandingPage: GlobalConfig = {
                       type: 'upload',
                     },
                     { name: 'name', label: 'Ім’я', required: true, type: 'text' },
+                    instagramUrlField,
                   ],
                 },
               ],
@@ -608,9 +621,7 @@ export const LandingPage: GlobalConfig = {
                   defaultValue:
                     (landingPageCmsDefaults.footer as { socialLinks?: unknown[] } | undefined)
                       ?.socialLinks ?? [],
-                  admin: {
-                    hidden: true,
-                  },
+                  admin: collapsedArrayAdmin,
                   fields: [
                     { name: 'label', label: 'Скорочення', required: true, type: 'text' },
                     { name: 'url', label: 'URL', required: true, type: 'text' },
@@ -620,9 +631,6 @@ export const LandingPage: GlobalConfig = {
                   name: 'contact',
                   label: 'Контакт для зв’язку',
                   type: 'group',
-                  admin: {
-                    hidden: true,
-                  },
                   fields: [
                     { name: 'title', label: 'Заголовок', required: true, type: 'text' },
                     { name: 'label', label: 'Текст', required: true, type: 'text' },
@@ -633,9 +641,6 @@ export const LandingPage: GlobalConfig = {
                   name: 'write',
                   label: 'Написати мені',
                   type: 'group',
-                  admin: {
-                    hidden: true,
-                  },
                   fields: [
                     { name: 'title', label: 'Заголовок', required: true, type: 'text' },
                     { name: 'label', label: 'Текст', required: true, type: 'text' },

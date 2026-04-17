@@ -5,6 +5,7 @@ import * as migration_20260415_034900_reviews_blocks from './20260415_034900_rev
 import * as migration_20260415_041500_review_video_upload from './20260415_041500_review_video_upload';
 import * as migration_20260416_003500_single_landing_images from './20260416_003500_single_landing_images';
 import * as migration_20260416_005000_drop_legacy_responsive_image_columns from './20260416_005000_drop_legacy_responsive_image_columns';
+import * as migration_20260417_223000_review_instagram_links from './20260417_223000_review_instagram_links';
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260416_005000_drop_legacy_responsive_image_columns.up,
     down: migration_20260416_005000_drop_legacy_responsive_image_columns.down,
     name: '20260416_005000_drop_legacy_responsive_image_columns'
+  },
+  {
+    up: migration_20260417_223000_review_instagram_links.up,
+    down: migration_20260417_223000_review_instagram_links.down,
+    name: '20260417_223000_review_instagram_links'
   },
 ];

@@ -495,6 +495,10 @@ export interface LandingPage {
               image: number | Media;
               avatar: number | Media;
               name: string;
+              /**
+               * Необов'язково. Якщо URL заданий, іконка Instagram з'явиться в картці відгуку.
+               */
+              instagramUrl?: string | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'videoReview';
@@ -503,6 +507,10 @@ export interface LandingPage {
               text: string;
               avatar: number | Media;
               name: string;
+              /**
+               * Необов'язково. Якщо URL заданий, іконка Instagram з'явиться в картці відгуку.
+               */
+              instagramUrl?: string | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'textReview';
@@ -514,6 +522,10 @@ export interface LandingPage {
           image: number | Media;
           avatar: number | Media;
           name: string;
+          /**
+           * Необов'язково. Якщо URL заданий, іконка Instagram з'явиться в картці відгуку.
+           */
+          instagramUrl?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -522,6 +534,10 @@ export interface LandingPage {
           text: string;
           avatar: number | Media;
           name: string;
+          /**
+           * Необов'язково. Якщо URL заданий, іконка Instagram з'явиться в картці відгуку.
+           */
+          instagramUrl?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -744,6 +760,7 @@ export interface LandingPageSelect<T extends boolean = true> {
                     image?: T;
                     avatar?: T;
                     name?: T;
+                    instagramUrl?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -753,6 +770,7 @@ export interface LandingPageSelect<T extends boolean = true> {
                     text?: T;
                     avatar?: T;
                     name?: T;
+                    instagramUrl?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -763,6 +781,7 @@ export interface LandingPageSelect<T extends boolean = true> {
               image?: T;
               avatar?: T;
               name?: T;
+              instagramUrl?: T;
               id?: T;
             };
         textItems?:
@@ -771,6 +790,7 @@ export interface LandingPageSelect<T extends boolean = true> {
               text?: T;
               avatar?: T;
               name?: T;
+              instagramUrl?: T;
               id?: T;
             };
       };

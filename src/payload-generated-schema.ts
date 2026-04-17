@@ -473,6 +473,7 @@ export const landing_page_blocks_video_review = pgTable(
         onDelete: 'set null',
       }),
     name: varchar('name').notNull(),
+    instagramUrl: varchar('instagram_url'),
     blockName: varchar('block_name'),
   },
   (columns) => [
@@ -504,6 +505,7 @@ export const landing_page_blocks_text_review = pgTable(
         onDelete: 'set null',
       }),
     name: varchar('name').notNull(),
+    instagramUrl: varchar('instagram_url'),
     blockName: varchar('block_name'),
   },
   (columns) => [
@@ -536,6 +538,7 @@ export const landing_page_reviews_video_items = pgTable(
         onDelete: 'set null',
       }),
     name: varchar('name').notNull(),
+    instagramUrl: varchar('instagram_url'),
   },
   (columns) => [
     index('landing_page_reviews_video_items_order_idx').on(columns._order),
@@ -563,6 +566,7 @@ export const landing_page_reviews_text_items = pgTable(
         onDelete: 'set null',
       }),
     name: varchar('name').notNull(),
+    instagramUrl: varchar('instagram_url'),
   },
   (columns) => [
     index('landing_page_reviews_text_items_order_idx').on(columns._order),
