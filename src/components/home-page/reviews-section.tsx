@@ -17,7 +17,14 @@ export function ReviewsSection({ reviews }: { reviews: LandingPageContent['revie
       return;
     }
 
-    const distance = window.innerWidth >= 1024 ? 473 : 336;
+    const firstReview = reviewsNode.firstElementChild;
+    const gap = Number.parseFloat(window.getComputedStyle(reviewsNode).gap || '0');
+    const distance =
+      firstReview instanceof HTMLElement
+        ? firstReview.getBoundingClientRect().width + gap
+        : window.innerWidth >= 1024
+          ? 473
+          : 336;
     const offset = direction === "left" ? -distance : distance;
     reviewsNode.scrollBy({ left: offset, behavior: "smooth" });
   };
@@ -48,10 +55,15 @@ export function ReviewsSection({ reviews }: { reviews: LandingPageContent['revie
 
           <div
             ref={reviewsRef}
-            className="no-scrollbar flex flex-col items-stretch gap-6 overflow-visible lg:-my-[80px] lg:flex-row lg:gap-10 lg:overflow-x-auto lg:overflow-y-hidden lg:py-[80px] lg:snap-x lg:snap-mandatory"
+            className="no-scrollbar -my-4 flex snap-x snap-mandatory items-stretch gap-6 overflow-x-auto overflow-y-hidden py-4 lg:-my-[80px] lg:gap-10 lg:py-[80px]"
           >
             {reviews.items.map((item, index) => (
-              <Reveal key={`${item.blockType}-${index}`} className="flex w-full items-stretch lg:snap-start lg:w-auto lg:shrink-0 lg:self-stretch" y={24} delay={index * 0.04}>
+              <Reveal
+                key={`${item.blockType}-${index}`}
+                className="flex w-[336px] max-w-[calc(100vw-3rem)] shrink-0 snap-start items-stretch lg:w-auto lg:max-w-none lg:self-stretch"
+                y={24}
+                delay={index * 0.04}
+              >
                 {item.blockType === 'videoReview' ? <VideoReviewCard item={item} /> : <TextReviewCard item={item} />}
               </Reveal>
             ))}

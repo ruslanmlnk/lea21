@@ -25,9 +25,7 @@ export function HomePage({ content }: { content: LandingPageContent }) {
       <ProgramSection program={content.program} />
       <ExpertiseSection expertise={content.expertise} />
       <CertificatesSection certificates={content.certificates} />
-      <div className="hidden lg:block">
-        <ReviewsSection reviews={content.reviews} />
-      </div>
+      <ReviewsSection reviews={content.reviews} />
       <CtaSection cta={content.cta} />
       <ContactSection contact={content.contact} />
       <FooterSection footer={content.footer} />
