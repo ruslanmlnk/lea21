@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 
-import { LogoMark } from './logo-mark'
-
 import type { LandingPageContent } from './types'
 
 export function HeaderSection({ header }: { header: LandingPageContent['header'] }) {
@@ -20,7 +18,7 @@ export function HeaderSection({ header }: { header: LandingPageContent['header']
           aria-label={logoText}
           className="justify-self-start text-[#1F445A] transition-opacity hover:opacity-75"
         >
-          <LogoMark className="h-[22px] w-auto lg:h-[25px]" />
+          <img src="/logo.svg" alt={logoText} className="h-[28px] w-auto lg:h-[34px]" />
         </a>
 
         <nav className="font-nav hidden translate-y-px items-center gap-[30px] justify-self-center text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] lg:flex">
