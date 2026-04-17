@@ -18,9 +18,7 @@ export function HeaderSection({ header }: { header: LandingPageContent['header']
           aria-label={logoText}
           className="justify-self-start text-[#1F445A] transition-opacity hover:opacity-75"
         >
-          <span className="block h-[40px] w-[18px] overflow-hidden lg:h-[52px] lg:w-[23px]">
-            <img src="/logo.svg" alt={logoText} className="h-full w-full object-cover object-center" />
-          </span>
+          <img src="/logo.svg" alt={logoText} className="h-[46px] w-auto lg:h-[58px]" />
         </a>
 
         <nav className="font-nav hidden translate-y-px items-center gap-[30px] justify-self-center text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] lg:flex">
