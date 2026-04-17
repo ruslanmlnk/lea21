@@ -40,7 +40,7 @@ export function ReviewsSection({ reviews }: { reviews: LandingPageContent['revie
               </div>
             </Reveal>
 
-            <Reveal delay={0.08} x={20} className="flex w-[140px] items-center justify-between">
+            <Reveal delay={0.08} x={20} className="hidden w-[140px] items-center justify-between lg:flex">
               <ReviewArrowButton direction="left" onClick={() => scrollReviews("left")} />
               <ReviewArrowButton direction="right" onClick={() => scrollReviews("right")} />
             </Reveal>
@@ -48,10 +48,10 @@ export function ReviewsSection({ reviews }: { reviews: LandingPageContent['revie
 
           <div
             ref={reviewsRef}
-            className="-my-[80px] flex items-start gap-6 overflow-x-auto overflow-y-hidden py-[80px] no-scrollbar snap-x snap-mandatory lg:gap-10"
+            className="flex flex-col items-stretch gap-6 overflow-visible lg:-my-[80px] lg:flex-row lg:gap-10 lg:overflow-x-auto lg:overflow-y-hidden lg:py-[80px] lg:no-scrollbar lg:snap-x lg:snap-mandatory"
           >
             {reviews.items.map((item, index) => (
-              <Reveal key={`${item.blockType}-${index}`} className="snap-start shrink-0" y={24} delay={index * 0.04}>
+              <Reveal key={`${item.blockType}-${index}`} className="flex w-full items-stretch lg:snap-start lg:w-auto lg:shrink-0 lg:self-stretch" y={24} delay={index * 0.04}>
                 {item.blockType === 'videoReview' ? <VideoReviewCard item={item} /> : <TextReviewCard item={item} />}
               </Reveal>
             ))}

@@ -245,8 +245,8 @@ export function VideoReviewCard({ item }: { item: VideoReviewItem }) {
   }, [isPlaying])
 
   return (
-    <article className="relative h-[292px] w-[312px] shrink-0 lg:h-[347px] lg:w-[433px]">
-      <div className="absolute inset-x-0 top-[154px] h-[138px] bg-white shadow-[0_20px_50px_rgba(31,68,90,0.12)] lg:top-[185px] lg:h-[162px]" />
+    <article className="relative h-full min-h-[292px] w-full lg:min-h-[347px] lg:w-[433px]">
+      <div className="absolute inset-x-0 bottom-0 top-[154px] bg-white shadow-[0_20px_50px_rgba(31,68,90,0.12)] lg:top-[185px]" />
 
       <div className="absolute inset-x-[18px] top-0 z-10 overflow-hidden shadow-[0_22px_54px_rgba(31,68,90,0.2)] lg:inset-x-[40px]">
         {isPlaying && videoUrl ? (
@@ -297,7 +297,7 @@ export function VideoReviewCard({ item }: { item: VideoReviewItem }) {
         )}
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 z-10 flex h-[138px] items-end justify-center px-4 pb-6 lg:h-[162px] lg:px-[38px] lg:pb-[38px]">
+      <div className="absolute inset-x-0 bottom-0 z-10 flex min-h-[138px] items-end justify-center px-4 pb-6 lg:min-h-[162px] lg:px-[38px] lg:pb-[38px]">
         <SocialBadge avatar={item.avatar} name={item.name} />
       </div>
     </article>

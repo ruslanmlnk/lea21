@@ -204,7 +204,7 @@ export function SocialBadge({ avatar, name }: { avatar: string; name: string }) 
 
 export function TextReviewCard({ item }: { item: TextReviewItem }) {
   return (
-    <article className="flex h-[347px] w-[312px] shrink-0 flex-col justify-between bg-white px-6 py-8 text-center lg:w-[433px] lg:px-[38px] lg:py-[38px]">
+    <article className="flex h-full w-full flex-col justify-between bg-white px-6 py-8 text-center lg:min-h-[347px] lg:w-[433px] lg:px-[38px] lg:py-[38px]">
       <p className="text-sm leading-[1.45] text-[#1F445A]">{item.text}</p>
       <div className="mx-auto mt-6">
         <SocialBadge avatar={item.avatar} name={item.name} />
