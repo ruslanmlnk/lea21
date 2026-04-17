@@ -48,7 +48,7 @@ export function ReviewsSection({ reviews }: { reviews: LandingPageContent['revie
 
           <div
             ref={reviewsRef}
-            className="flex flex-col items-stretch gap-6 overflow-visible lg:-my-[80px] lg:flex-row lg:gap-10 lg:overflow-x-auto lg:overflow-y-hidden lg:py-[80px] lg:no-scrollbar lg:snap-x lg:snap-mandatory"
+            className="no-scrollbar flex flex-col items-stretch gap-6 overflow-visible lg:-my-[80px] lg:flex-row lg:gap-10 lg:overflow-x-auto lg:overflow-y-hidden lg:py-[80px] lg:snap-x lg:snap-mandatory"
           >
             {reviews.items.map((item, index) => (
               <Reveal key={`${item.blockType}-${index}`} className="flex w-full items-stretch lg:snap-start lg:w-auto lg:shrink-0 lg:self-stretch" y={24} delay={index * 0.04}>
