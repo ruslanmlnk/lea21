@@ -1,6 +1,5 @@
 import { FooterLinkGroup } from './shared'
 import { Reveal, StaggerItem, StaggerReveal } from './shared-client'
-import { LogoMark } from './logo-mark'
 
 import type { LandingPageContent } from './types'
 
@@ -21,8 +20,10 @@ export function FooterSection({ footer }: { footer: LandingPageContent['footer']
           </Reveal>
 
           <Reveal delay={0.08} className="order-1 flex flex-col items-center gap-4 lg:order-none lg:gap-6">
-            <a href="#home" aria-label={footer.logoText} className="text-[#1F445A]">
-              <LogoMark className="h-[46px] w-auto lg:h-[68px]" />
+            <a href="#home" aria-label="DOTUK" className="text-[#1F445A]">
+              <span className="font-display block text-[46px] uppercase leading-none lg:text-[68px]">
+                DOTUK
+              </span>
             </a>
             <div className="flex items-center gap-6 text-base font-medium uppercase text-[#8FAFC2]">
               {footer.socialLinks.map((item) => (
