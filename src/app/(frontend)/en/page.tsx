@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 
 import { HomePage } from '@/components/home-page'
 import { getLandingPageContent } from '@/lib/landing'
-import { defaultLocale } from '@/lib/locales'
+
+const locale = 'en'
 
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const content = await getLandingPageContent(defaultLocale)
+  const content = await getLandingPageContent(locale)
 
   return {
     title: content.seo.metaTitle,
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const content = await getLandingPageContent(defaultLocale)
+  const content = await getLandingPageContent(locale)
 
-  return <HomePage content={content} locale={defaultLocale} />
+  return <HomePage content={content} locale={locale} />
 }

@@ -23,6 +23,7 @@ import {
   pgEnum,
 } from '@payloadcms/db-postgres/drizzle/pg-core'
 import { sql, relations } from '@payloadcms/db-postgres/drizzle'
+export const enum__locales = pgEnum('enum__locales', ['uk', 'en'])
 export const enum_form_submissions_status = pgEnum('enum_form_submissions_status', [
   'new',
   'in-progress',
@@ -98,7 +99,6 @@ export const media = pgTable(
   'media',
   {
     id: serial('id').primaryKey(),
-    alt: varchar('alt').notNull(),
     seedKey: varchar('seed_key'),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
@@ -121,6 +121,24 @@ export const media = pgTable(
     index('media_updated_at_idx').on(columns.updatedAt),
     index('media_created_at_idx').on(columns.createdAt),
     uniqueIndex('media_filename_idx').on(columns.filename),
+  ],
+)
+
+export const media_locales = pgTable(
+  'media_locales',
+  {
+    alt: varchar('alt').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('media_locales_locale_parent_id_unique').on(columns._locale, columns._parentID),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [media.id],
+      name: 'media_locales_parent_id_fk',
+    }).onDelete('cascade'),
   ],
 )
 
@@ -291,7 +309,6 @@ export const landing_page_header_nav_items = pgTable(
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    label: varchar('label').notNull(),
     href: varchar('href').notNull(),
   },
   (columns) => [
@@ -305,6 +322,27 @@ export const landing_page_header_nav_items = pgTable(
   ],
 )
 
+export const landing_page_header_nav_items_locales = pgTable(
+  'landing_page_header_nav_items_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_header_nav_items_locales_locale_parent_id_uniqu').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_header_nav_items.id],
+      name: 'landing_page_header_nav_items_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_for_who_primary_items = pgTable(
   'landing_page_for_who_primary_items',
   {
@@ -312,7 +350,6 @@ export const landing_page_for_who_primary_items = pgTable(
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
     icon: enum_landing_page_for_who_primary_items_icon('icon').notNull(),
-    label: varchar('label').notNull(),
   },
   (columns) => [
     index('landing_page_for_who_primary_items_order_idx').on(columns._order),
@@ -325,6 +362,27 @@ export const landing_page_for_who_primary_items = pgTable(
   ],
 )
 
+export const landing_page_for_who_primary_items_locales = pgTable(
+  'landing_page_for_who_primary_items_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_for_who_primary_items_locales_locale_parent_id_').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_for_who_primary_items.id],
+      name: 'landing_page_for_who_primary_items_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_for_who_secondary_items = pgTable(
   'landing_page_for_who_secondary_items',
   {
@@ -332,7 +390,6 @@ export const landing_page_for_who_secondary_items = pgTable(
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
     icon: enum_landing_page_for_who_secondary_items_icon('icon').notNull(),
-    label: varchar('label').notNull(),
   },
   (columns) => [
     index('landing_page_for_who_secondary_items_order_idx').on(columns._order),
@@ -345,14 +402,33 @@ export const landing_page_for_who_secondary_items = pgTable(
   ],
 )
 
+export const landing_page_for_who_secondary_items_locales = pgTable(
+  'landing_page_for_who_secondary_items_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_for_who_secondary_items_locales_locale_parent_i').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_for_who_secondary_items.id],
+      name: 'landing_page_for_who_secondary_items_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_results_items = pgTable(
   'landing_page_results_items',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    title: varchar('title').notNull(),
-    description: varchar('description').notNull(),
   },
   (columns) => [
     index('landing_page_results_items_order_idx').on(columns._order),
@@ -365,14 +441,34 @@ export const landing_page_results_items = pgTable(
   ],
 )
 
+export const landing_page_results_items_locales = pgTable(
+  'landing_page_results_items_locales',
+  {
+    title: varchar('title').notNull(),
+    description: varchar('description').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_results_items_locales_locale_parent_id_unique').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_results_items.id],
+      name: 'landing_page_results_items_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_process_steps = pgTable(
   'landing_page_process_steps',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    title: varchar('title').notNull(),
-    description: varchar('description').notNull(),
     raised: boolean('raised'),
   },
   (columns) => [
@@ -386,14 +482,34 @@ export const landing_page_process_steps = pgTable(
   ],
 )
 
+export const landing_page_process_steps_locales = pgTable(
+  'landing_page_process_steps_locales',
+  {
+    title: varchar('title').notNull(),
+    description: varchar('description').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_process_steps_locales_locale_parent_id_unique').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_process_steps.id],
+      name: 'landing_page_process_steps_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_program_modules = pgTable(
   'landing_page_program_modules',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    title: varchar('title').notNull(),
-    description: varchar('description'),
   },
   (columns) => [
     index('landing_page_program_modules_order_idx').on(columns._order),
@@ -406,14 +522,34 @@ export const landing_page_program_modules = pgTable(
   ],
 )
 
+export const landing_page_program_modules_locales = pgTable(
+  'landing_page_program_modules_locales',
+  {
+    title: varchar('title').notNull(),
+    description: varchar('description'),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_program_modules_locales_locale_parent_id_unique').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_program_modules.id],
+      name: 'landing_page_program_modules_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_expertise_stats = pgTable(
   'landing_page_expertise_stats',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    title: varchar('title').notNull(),
-    description: varchar('description').notNull(),
     align: enum_landing_page_expertise_stats_align('align').notNull(),
   },
   (columns) => [
@@ -427,13 +563,34 @@ export const landing_page_expertise_stats = pgTable(
   ],
 )
 
+export const landing_page_expertise_stats_locales = pgTable(
+  'landing_page_expertise_stats_locales',
+  {
+    title: varchar('title').notNull(),
+    description: varchar('description').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_expertise_stats_locales_locale_parent_id_unique').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_expertise_stats.id],
+      name: 'landing_page_expertise_stats_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_certificates_items = pgTable(
   'landing_page_certificates_items',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    label: varchar('label').notNull(),
     image: integer('image_id')
       .notNull()
       .references(() => media.id, {
@@ -448,6 +605,27 @@ export const landing_page_certificates_items = pgTable(
       columns: [columns['_parentID']],
       foreignColumns: [landing_page.id],
       name: 'landing_page_certificates_items_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
+export const landing_page_certificates_items_locales = pgTable(
+  'landing_page_certificates_items_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_certificates_items_locales_locale_parent_id_uni').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_certificates_items.id],
+      name: 'landing_page_certificates_items_locales_parent_id_fk',
     }).onDelete('cascade'),
   ],
 )
@@ -472,7 +650,6 @@ export const landing_page_blocks_video_review = pgTable(
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    name: varchar('name').notNull(),
     instagramUrl: varchar('instagram_url'),
     blockName: varchar('block_name'),
   },
@@ -491,6 +668,27 @@ export const landing_page_blocks_video_review = pgTable(
   ],
 )
 
+export const landing_page_blocks_video_review_locales = pgTable(
+  'landing_page_blocks_video_review_locales',
+  {
+    name: varchar('name').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_blocks_video_review_locales_locale_parent_id_un').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_blocks_video_review.id],
+      name: 'landing_page_blocks_video_review_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_blocks_text_review = pgTable(
   'landing_page_blocks_text_review',
   {
@@ -498,13 +696,11 @@ export const landing_page_blocks_text_review = pgTable(
     _parentID: integer('_parent_id').notNull(),
     _path: text('_path').notNull(),
     id: varchar('id').primaryKey(),
-    text: varchar('text').notNull(),
     avatar: integer('avatar_id')
       .notNull()
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    name: varchar('name').notNull(),
     instagramUrl: varchar('instagram_url'),
     blockName: varchar('block_name'),
   },
@@ -517,6 +713,28 @@ export const landing_page_blocks_text_review = pgTable(
       columns: [columns['_parentID']],
       foreignColumns: [landing_page.id],
       name: 'landing_page_blocks_text_review_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
+export const landing_page_blocks_text_review_locales = pgTable(
+  'landing_page_blocks_text_review_locales',
+  {
+    text: varchar('text').notNull(),
+    name: varchar('name').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_blocks_text_review_locales_locale_parent_id_uni').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_blocks_text_review.id],
+      name: 'landing_page_blocks_text_review_locales_parent_id_fk',
     }).onDelete('cascade'),
   ],
 )
@@ -537,7 +755,6 @@ export const landing_page_reviews_video_items = pgTable(
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    name: varchar('name').notNull(),
     instagramUrl: varchar('instagram_url'),
   },
   (columns) => [
@@ -553,19 +770,38 @@ export const landing_page_reviews_video_items = pgTable(
   ],
 )
 
+export const landing_page_reviews_video_items_locales = pgTable(
+  'landing_page_reviews_video_items_locales',
+  {
+    name: varchar('name').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_reviews_video_items_locales_locale_parent_id_un').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_reviews_video_items.id],
+      name: 'landing_page_reviews_video_items_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_reviews_text_items = pgTable(
   'landing_page_reviews_text_items',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    text: varchar('text').notNull(),
     avatar: integer('avatar_id')
       .notNull()
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    name: varchar('name').notNull(),
     instagramUrl: varchar('instagram_url'),
   },
   (columns) => [
@@ -580,13 +816,34 @@ export const landing_page_reviews_text_items = pgTable(
   ],
 )
 
+export const landing_page_reviews_text_items_locales = pgTable(
+  'landing_page_reviews_text_items_locales',
+  {
+    text: varchar('text').notNull(),
+    name: varchar('name').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_reviews_text_items_locales_locale_parent_id_uni').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_reviews_text_items.id],
+      name: 'landing_page_reviews_text_items_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_footer_left_links = pgTable(
   'landing_page_footer_left_links',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    label: varchar('label').notNull(),
     href: varchar('href').notNull(),
   },
   (columns) => [
@@ -600,13 +857,33 @@ export const landing_page_footer_left_links = pgTable(
   ],
 )
 
+export const landing_page_footer_left_links_locales = pgTable(
+  'landing_page_footer_left_links_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_footer_left_links_locales_locale_parent_id_uniq').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_footer_left_links.id],
+      name: 'landing_page_footer_left_links_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_footer_right_links = pgTable(
   'landing_page_footer_right_links',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    label: varchar('label').notNull(),
     href: varchar('href').notNull(),
   },
   (columns) => [
@@ -620,13 +897,33 @@ export const landing_page_footer_right_links = pgTable(
   ],
 )
 
+export const landing_page_footer_right_links_locales = pgTable(
+  'landing_page_footer_right_links_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_footer_right_links_locales_locale_parent_id_uni').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_footer_right_links.id],
+      name: 'landing_page_footer_right_links_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page_footer_social_links = pgTable(
   'landing_page_footer_social_links',
   {
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    label: varchar('label').notNull(),
     url: varchar('url').notNull(),
   },
   (columns) => [
@@ -640,23 +937,31 @@ export const landing_page_footer_social_links = pgTable(
   ],
 )
 
+export const landing_page_footer_social_links_locales = pgTable(
+  'landing_page_footer_social_links_locales',
+  {
+    label: varchar('label').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_footer_social_links_locales_locale_parent_id_un').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page_footer_social_links.id],
+      name: 'landing_page_footer_social_links_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const landing_page = pgTable(
   'landing_page',
   {
     id: serial('id').primaryKey(),
-    seo_metaTitle: varchar('seo_meta_title').notNull(),
-    seo_metaDescription: varchar('seo_meta_description').notNull(),
-    header_logoText: varchar('header_logo_text').notNull(),
-    header_ctaLabel: varchar('header_cta_label').notNull(),
-    hero_titleLineOne: varchar('hero_title_line_one').notNull(),
-    hero_titleLineTwo: varchar('hero_title_line_two').notNull(),
-    hero_script: varchar('hero_script').notNull(),
-    hero_subtitle: varchar('hero_subtitle').notNull(),
-    hero_description: varchar('hero_description').notNull(),
-    hero_desktopDescription: varchar('hero_desktop_description').notNull(),
-    hero_availability: varchar('hero_availability').notNull(),
-    hero_durationValue: varchar('hero_duration_value').notNull(),
-    hero_durationLabel: varchar('hero_duration_label').notNull(),
     hero_backgroundImage: integer('hero_background_image_id')
       .notNull()
       .references(() => media.id, {
@@ -667,21 +972,12 @@ export const landing_page = pgTable(
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    project_title: varchar('project_title').notNull(),
-    project_scriptTitle: varchar('project_script_title').notNull(),
-    project_intro: varchar('project_intro').notNull(),
-    project_body: varchar('project_body').notNull(),
-    project_ctaLabel: varchar('project_cta_label').notNull(),
     project_ctaHref: varchar('project_cta_href').notNull(),
     project_image: integer('project_image_id')
       .notNull()
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    forWho_title: varchar('for_who_title').notNull(),
-    forWho_scriptTitle: varchar('for_who_script_title').notNull(),
-    results_title: varchar('results_title').notNull(),
-    results_summary: varchar('results_summary').notNull(),
     results_backgroundImage: integer('results_background_image_id')
       .notNull()
       .references(() => media.id, {
@@ -692,56 +988,24 @@ export const landing_page = pgTable(
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    process_title: varchar('process_title').notNull(),
-    process_scriptTitle: varchar('process_script_title').notNull(),
-    program_title: varchar('program_title').notNull(),
-    expertise_title: varchar('expertise_title').notNull(),
-    expertise_scriptTitle: varchar('expertise_script_title').notNull(),
-    expertise_description: varchar('expertise_description').notNull(),
-    expertise_intro: varchar('expertise_intro').notNull(),
     expertise_image: integer('expertise_image_id')
       .notNull()
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    certificates_title: varchar('certificates_title').notNull(),
-    certificates_scriptWordOne: varchar('certificates_script_word_one').notNull(),
-    certificates_scriptWordTwo: varchar('certificates_script_word_two').notNull(),
-    reviews_title: varchar('reviews_title').notNull(),
-    reviews_scriptTitle: varchar('reviews_script_title').notNull(),
-    cta_title: varchar('cta_title').notNull(),
-    cta_description: varchar('cta_description').notNull(),
-    cta_buttonLabel: varchar('cta_button_label').notNull(),
     cta_buttonHref: varchar('cta_button_href').notNull(),
     cta_backgroundImage: integer('cta_background_image_id')
       .notNull()
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    contact_eyebrow: varchar('contact_eyebrow').notNull(),
-    contact_title: varchar('contact_title').notNull(),
-    contact_script: varchar('contact_script').notNull(),
     contact_image: integer('contact_image_id')
       .notNull()
       .references(() => media.id, {
         onDelete: 'set null',
       }),
-    contact_placeholders_firstName: varchar('contact_placeholders_first_name').notNull(),
-    contact_placeholders_lastName: varchar('contact_placeholders_last_name').notNull(),
-    contact_placeholders_email: varchar('contact_placeholders_email').notNull(),
-    contact_placeholders_phone: varchar('contact_placeholders_phone').notNull(),
-    contact_placeholders_message: varchar('contact_placeholders_message').notNull(),
-    contact_submitLabel: varchar('contact_submit_label').notNull(),
-    contact_successMessage: varchar('contact_success_message').notNull(),
-    contact_errorMessage: varchar('contact_error_message').notNull(),
-    footer_logoText: varchar('footer_logo_text').notNull(),
-    footer_contact_title: varchar('footer_contact_title').notNull(),
-    footer_contact_label: varchar('footer_contact_label').notNull(),
     footer_contact_href: varchar('footer_contact_href').notNull(),
-    footer_write_title: varchar('footer_write_title').notNull(),
-    footer_write_label: varchar('footer_write_label').notNull(),
     footer_write_href: varchar('footer_write_href').notNull(),
-    footer_socialsTitle: varchar('footer_socials_title').notNull(),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
     createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
   },
@@ -757,6 +1021,80 @@ export const landing_page = pgTable(
   ],
 )
 
+export const landing_page_locales = pgTable(
+  'landing_page_locales',
+  {
+    seo_metaTitle: varchar('seo_meta_title').notNull(),
+    seo_metaDescription: varchar('seo_meta_description').notNull(),
+    header_logoText: varchar('header_logo_text').notNull(),
+    header_ctaLabel: varchar('header_cta_label').notNull(),
+    hero_titleLineOne: varchar('hero_title_line_one').notNull(),
+    hero_titleLineTwo: varchar('hero_title_line_two').notNull(),
+    hero_script: varchar('hero_script').notNull(),
+    hero_subtitle: varchar('hero_subtitle').notNull(),
+    hero_description: varchar('hero_description').notNull(),
+    hero_desktopDescription: varchar('hero_desktop_description').notNull(),
+    hero_availability: varchar('hero_availability').notNull(),
+    hero_durationValue: varchar('hero_duration_value').notNull(),
+    hero_durationLabel: varchar('hero_duration_label').notNull(),
+    project_title: varchar('project_title').notNull(),
+    project_scriptTitle: varchar('project_script_title').notNull(),
+    project_intro: varchar('project_intro').notNull(),
+    project_body: varchar('project_body').notNull(),
+    project_ctaLabel: varchar('project_cta_label').notNull(),
+    forWho_title: varchar('for_who_title').notNull(),
+    forWho_scriptTitle: varchar('for_who_script_title').notNull(),
+    results_title: varchar('results_title').notNull(),
+    results_summary: varchar('results_summary').notNull(),
+    process_title: varchar('process_title').notNull(),
+    process_scriptTitle: varchar('process_script_title').notNull(),
+    program_title: varchar('program_title').notNull(),
+    expertise_title: varchar('expertise_title').notNull(),
+    expertise_scriptTitle: varchar('expertise_script_title').notNull(),
+    expertise_description: varchar('expertise_description').notNull(),
+    expertise_intro: varchar('expertise_intro').notNull(),
+    certificates_title: varchar('certificates_title').notNull(),
+    certificates_scriptWordOne: varchar('certificates_script_word_one').notNull(),
+    certificates_scriptWordTwo: varchar('certificates_script_word_two').notNull(),
+    reviews_title: varchar('reviews_title').notNull(),
+    reviews_scriptTitle: varchar('reviews_script_title').notNull(),
+    cta_title: varchar('cta_title').notNull(),
+    cta_description: varchar('cta_description').notNull(),
+    cta_buttonLabel: varchar('cta_button_label').notNull(),
+    contact_eyebrow: varchar('contact_eyebrow').notNull(),
+    contact_title: varchar('contact_title').notNull(),
+    contact_script: varchar('contact_script').notNull(),
+    contact_placeholders_firstName: varchar('contact_placeholders_first_name').notNull(),
+    contact_placeholders_lastName: varchar('contact_placeholders_last_name').notNull(),
+    contact_placeholders_email: varchar('contact_placeholders_email').notNull(),
+    contact_placeholders_phone: varchar('contact_placeholders_phone').notNull(),
+    contact_placeholders_message: varchar('contact_placeholders_message').notNull(),
+    contact_submitLabel: varchar('contact_submit_label').notNull(),
+    contact_successMessage: varchar('contact_success_message').notNull(),
+    contact_errorMessage: varchar('contact_error_message').notNull(),
+    footer_logoText: varchar('footer_logo_text').notNull(),
+    footer_contact_title: varchar('footer_contact_title').notNull(),
+    footer_contact_label: varchar('footer_contact_label').notNull(),
+    footer_write_title: varchar('footer_write_title').notNull(),
+    footer_write_label: varchar('footer_write_label').notNull(),
+    footer_socialsTitle: varchar('footer_socials_title').notNull(),
+    id: serial('id').primaryKey(),
+    _locale: enum__locales('_locale').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+  },
+  (columns) => [
+    uniqueIndex('landing_page_locales_locale_parent_id_unique').on(
+      columns._locale,
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [landing_page.id],
+      name: 'landing_page_locales_parent_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
 export const relations_users_sessions = relations(users_sessions, ({ one }) => ({
   _parentID: one(users, {
     fields: [users_sessions._parentID],
@@ -769,7 +1107,18 @@ export const relations_users = relations(users, ({ many }) => ({
     relationName: 'sessions',
   }),
 }))
-export const relations_media = relations(media, () => ({}))
+export const relations_media_locales = relations(media_locales, ({ one }) => ({
+  _parentID: one(media, {
+    fields: [media_locales._parentID],
+    references: [media.id],
+    relationName: '_locales',
+  }),
+}))
+export const relations_media = relations(media, ({ many }) => ({
+  _locales: many(media_locales, {
+    relationName: '_locales',
+  }),
+}))
 export const relations_form_submissions = relations(form_submissions, () => ({}))
 export const relations_payload_kv = relations(payload_kv, () => ({}))
 export const relations_payload_locked_documents_rels = relations(
@@ -826,83 +1175,187 @@ export const relations_payload_preferences = relations(payload_preferences, ({ m
   }),
 }))
 export const relations_payload_migrations = relations(payload_migrations, () => ({}))
+export const relations_landing_page_header_nav_items_locales = relations(
+  landing_page_header_nav_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_header_nav_items, {
+      fields: [landing_page_header_nav_items_locales._parentID],
+      references: [landing_page_header_nav_items.id],
+      relationName: '_locales',
+    }),
+  }),
+)
 export const relations_landing_page_header_nav_items = relations(
   landing_page_header_nav_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_header_nav_items._parentID],
       references: [landing_page.id],
       relationName: 'header_navItems',
     }),
+    _locales: many(landing_page_header_nav_items_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_for_who_primary_items_locales = relations(
+  landing_page_for_who_primary_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_for_who_primary_items, {
+      fields: [landing_page_for_who_primary_items_locales._parentID],
+      references: [landing_page_for_who_primary_items.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_for_who_primary_items = relations(
   landing_page_for_who_primary_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_for_who_primary_items._parentID],
       references: [landing_page.id],
       relationName: 'forWho_primaryItems',
     }),
+    _locales: many(landing_page_for_who_primary_items_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_for_who_secondary_items_locales = relations(
+  landing_page_for_who_secondary_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_for_who_secondary_items, {
+      fields: [landing_page_for_who_secondary_items_locales._parentID],
+      references: [landing_page_for_who_secondary_items.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_for_who_secondary_items = relations(
   landing_page_for_who_secondary_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_for_who_secondary_items._parentID],
       references: [landing_page.id],
       relationName: 'forWho_secondaryItems',
     }),
+    _locales: many(landing_page_for_who_secondary_items_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_results_items_locales = relations(
+  landing_page_results_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_results_items, {
+      fields: [landing_page_results_items_locales._parentID],
+      references: [landing_page_results_items.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_results_items = relations(
   landing_page_results_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_results_items._parentID],
       references: [landing_page.id],
       relationName: 'results_items',
     }),
+    _locales: many(landing_page_results_items_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_process_steps_locales = relations(
+  landing_page_process_steps_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_process_steps, {
+      fields: [landing_page_process_steps_locales._parentID],
+      references: [landing_page_process_steps.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_process_steps = relations(
   landing_page_process_steps,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_process_steps._parentID],
       references: [landing_page.id],
       relationName: 'process_steps',
     }),
+    _locales: many(landing_page_process_steps_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_program_modules_locales = relations(
+  landing_page_program_modules_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_program_modules, {
+      fields: [landing_page_program_modules_locales._parentID],
+      references: [landing_page_program_modules.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_program_modules = relations(
   landing_page_program_modules,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_program_modules._parentID],
       references: [landing_page.id],
       relationName: 'program_modules',
     }),
+    _locales: many(landing_page_program_modules_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_expertise_stats_locales = relations(
+  landing_page_expertise_stats_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_expertise_stats, {
+      fields: [landing_page_expertise_stats_locales._parentID],
+      references: [landing_page_expertise_stats.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_expertise_stats = relations(
   landing_page_expertise_stats,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_expertise_stats._parentID],
       references: [landing_page.id],
       relationName: 'expertise_stats',
     }),
+    _locales: many(landing_page_expertise_stats_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_certificates_items_locales = relations(
+  landing_page_certificates_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_certificates_items, {
+      fields: [landing_page_certificates_items_locales._parentID],
+      references: [landing_page_certificates_items.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_certificates_items = relations(
   landing_page_certificates_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_certificates_items._parentID],
       references: [landing_page.id],
       relationName: 'certificates_items',
+    }),
+    _locales: many(landing_page_certificates_items_locales, {
+      relationName: '_locales',
     }),
     image: one(media, {
       fields: [landing_page_certificates_items.image],
@@ -911,13 +1364,26 @@ export const relations_landing_page_certificates_items = relations(
     }),
   }),
 )
+export const relations_landing_page_blocks_video_review_locales = relations(
+  landing_page_blocks_video_review_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_blocks_video_review, {
+      fields: [landing_page_blocks_video_review_locales._parentID],
+      references: [landing_page_blocks_video_review.id],
+      relationName: '_locales',
+    }),
+  }),
+)
 export const relations_landing_page_blocks_video_review = relations(
   landing_page_blocks_video_review,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_blocks_video_review._parentID],
       references: [landing_page.id],
       relationName: '_blocks_videoReview',
+    }),
+    _locales: many(landing_page_blocks_video_review_locales, {
+      relationName: '_locales',
     }),
     video: one(media, {
       fields: [landing_page_blocks_video_review.video],
@@ -936,13 +1402,26 @@ export const relations_landing_page_blocks_video_review = relations(
     }),
   }),
 )
+export const relations_landing_page_blocks_text_review_locales = relations(
+  landing_page_blocks_text_review_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_blocks_text_review, {
+      fields: [landing_page_blocks_text_review_locales._parentID],
+      references: [landing_page_blocks_text_review.id],
+      relationName: '_locales',
+    }),
+  }),
+)
 export const relations_landing_page_blocks_text_review = relations(
   landing_page_blocks_text_review,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_blocks_text_review._parentID],
       references: [landing_page.id],
       relationName: '_blocks_textReview',
+    }),
+    _locales: many(landing_page_blocks_text_review_locales, {
+      relationName: '_locales',
     }),
     avatar: one(media, {
       fields: [landing_page_blocks_text_review.avatar],
@@ -951,13 +1430,26 @@ export const relations_landing_page_blocks_text_review = relations(
     }),
   }),
 )
+export const relations_landing_page_reviews_video_items_locales = relations(
+  landing_page_reviews_video_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_reviews_video_items, {
+      fields: [landing_page_reviews_video_items_locales._parentID],
+      references: [landing_page_reviews_video_items.id],
+      relationName: '_locales',
+    }),
+  }),
+)
 export const relations_landing_page_reviews_video_items = relations(
   landing_page_reviews_video_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_reviews_video_items._parentID],
       references: [landing_page.id],
       relationName: 'reviews_videoItems',
+    }),
+    _locales: many(landing_page_reviews_video_items_locales, {
+      relationName: '_locales',
     }),
     image: one(media, {
       fields: [landing_page_reviews_video_items.image],
@@ -971,13 +1463,26 @@ export const relations_landing_page_reviews_video_items = relations(
     }),
   }),
 )
+export const relations_landing_page_reviews_text_items_locales = relations(
+  landing_page_reviews_text_items_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_reviews_text_items, {
+      fields: [landing_page_reviews_text_items_locales._parentID],
+      references: [landing_page_reviews_text_items.id],
+      relationName: '_locales',
+    }),
+  }),
+)
 export const relations_landing_page_reviews_text_items = relations(
   landing_page_reviews_text_items,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_reviews_text_items._parentID],
       references: [landing_page.id],
       relationName: 'reviews_textItems',
+    }),
+    _locales: many(landing_page_reviews_text_items_locales, {
+      relationName: '_locales',
     }),
     avatar: one(media, {
       fields: [landing_page_reviews_text_items.avatar],
@@ -986,36 +1491,82 @@ export const relations_landing_page_reviews_text_items = relations(
     }),
   }),
 )
+export const relations_landing_page_footer_left_links_locales = relations(
+  landing_page_footer_left_links_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_footer_left_links, {
+      fields: [landing_page_footer_left_links_locales._parentID],
+      references: [landing_page_footer_left_links.id],
+      relationName: '_locales',
+    }),
+  }),
+)
 export const relations_landing_page_footer_left_links = relations(
   landing_page_footer_left_links,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_footer_left_links._parentID],
       references: [landing_page.id],
       relationName: 'footer_leftLinks',
     }),
+    _locales: many(landing_page_footer_left_links_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_footer_right_links_locales = relations(
+  landing_page_footer_right_links_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_footer_right_links, {
+      fields: [landing_page_footer_right_links_locales._parentID],
+      references: [landing_page_footer_right_links.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_footer_right_links = relations(
   landing_page_footer_right_links,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_footer_right_links._parentID],
       references: [landing_page.id],
       relationName: 'footer_rightLinks',
     }),
+    _locales: many(landing_page_footer_right_links_locales, {
+      relationName: '_locales',
+    }),
+  }),
+)
+export const relations_landing_page_footer_social_links_locales = relations(
+  landing_page_footer_social_links_locales,
+  ({ one }) => ({
+    _parentID: one(landing_page_footer_social_links, {
+      fields: [landing_page_footer_social_links_locales._parentID],
+      references: [landing_page_footer_social_links.id],
+      relationName: '_locales',
+    }),
   }),
 )
 export const relations_landing_page_footer_social_links = relations(
   landing_page_footer_social_links,
-  ({ one }) => ({
+  ({ one, many }) => ({
     _parentID: one(landing_page, {
       fields: [landing_page_footer_social_links._parentID],
       references: [landing_page.id],
       relationName: 'footer_socialLinks',
     }),
+    _locales: many(landing_page_footer_social_links_locales, {
+      relationName: '_locales',
+    }),
   }),
 )
+export const relations_landing_page_locales = relations(landing_page_locales, ({ one }) => ({
+  _parentID: one(landing_page, {
+    fields: [landing_page_locales._parentID],
+    references: [landing_page.id],
+    relationName: '_locales',
+  }),
+}))
 export const relations_landing_page = relations(landing_page, ({ one, many }) => ({
   header_navItems: many(landing_page_header_nav_items, {
     relationName: 'header_navItems',
@@ -1102,9 +1653,13 @@ export const relations_landing_page = relations(landing_page, ({ one, many }) =>
   footer_socialLinks: many(landing_page_footer_social_links, {
     relationName: 'footer_socialLinks',
   }),
+  _locales: many(landing_page_locales, {
+    relationName: '_locales',
+  }),
 }))
 
 type DatabaseSchema = {
+  enum__locales: typeof enum__locales
   enum_form_submissions_status: typeof enum_form_submissions_status
   enum_landing_page_for_who_primary_items_icon: typeof enum_landing_page_for_who_primary_items_icon
   enum_landing_page_for_who_secondary_items_icon: typeof enum_landing_page_for_who_secondary_items_icon
@@ -1112,6 +1667,7 @@ type DatabaseSchema = {
   users_sessions: typeof users_sessions
   users: typeof users
   media: typeof media
+  media_locales: typeof media_locales
   form_submissions: typeof form_submissions
   payload_kv: typeof payload_kv
   payload_locked_documents: typeof payload_locked_documents
@@ -1120,23 +1676,40 @@ type DatabaseSchema = {
   payload_preferences_rels: typeof payload_preferences_rels
   payload_migrations: typeof payload_migrations
   landing_page_header_nav_items: typeof landing_page_header_nav_items
+  landing_page_header_nav_items_locales: typeof landing_page_header_nav_items_locales
   landing_page_for_who_primary_items: typeof landing_page_for_who_primary_items
+  landing_page_for_who_primary_items_locales: typeof landing_page_for_who_primary_items_locales
   landing_page_for_who_secondary_items: typeof landing_page_for_who_secondary_items
+  landing_page_for_who_secondary_items_locales: typeof landing_page_for_who_secondary_items_locales
   landing_page_results_items: typeof landing_page_results_items
+  landing_page_results_items_locales: typeof landing_page_results_items_locales
   landing_page_process_steps: typeof landing_page_process_steps
+  landing_page_process_steps_locales: typeof landing_page_process_steps_locales
   landing_page_program_modules: typeof landing_page_program_modules
+  landing_page_program_modules_locales: typeof landing_page_program_modules_locales
   landing_page_expertise_stats: typeof landing_page_expertise_stats
+  landing_page_expertise_stats_locales: typeof landing_page_expertise_stats_locales
   landing_page_certificates_items: typeof landing_page_certificates_items
+  landing_page_certificates_items_locales: typeof landing_page_certificates_items_locales
   landing_page_blocks_video_review: typeof landing_page_blocks_video_review
+  landing_page_blocks_video_review_locales: typeof landing_page_blocks_video_review_locales
   landing_page_blocks_text_review: typeof landing_page_blocks_text_review
+  landing_page_blocks_text_review_locales: typeof landing_page_blocks_text_review_locales
   landing_page_reviews_video_items: typeof landing_page_reviews_video_items
+  landing_page_reviews_video_items_locales: typeof landing_page_reviews_video_items_locales
   landing_page_reviews_text_items: typeof landing_page_reviews_text_items
+  landing_page_reviews_text_items_locales: typeof landing_page_reviews_text_items_locales
   landing_page_footer_left_links: typeof landing_page_footer_left_links
+  landing_page_footer_left_links_locales: typeof landing_page_footer_left_links_locales
   landing_page_footer_right_links: typeof landing_page_footer_right_links
+  landing_page_footer_right_links_locales: typeof landing_page_footer_right_links_locales
   landing_page_footer_social_links: typeof landing_page_footer_social_links
+  landing_page_footer_social_links_locales: typeof landing_page_footer_social_links_locales
   landing_page: typeof landing_page
+  landing_page_locales: typeof landing_page_locales
   relations_users_sessions: typeof relations_users_sessions
   relations_users: typeof relations_users
+  relations_media_locales: typeof relations_media_locales
   relations_media: typeof relations_media
   relations_form_submissions: typeof relations_form_submissions
   relations_payload_kv: typeof relations_payload_kv
@@ -1145,21 +1718,37 @@ type DatabaseSchema = {
   relations_payload_preferences_rels: typeof relations_payload_preferences_rels
   relations_payload_preferences: typeof relations_payload_preferences
   relations_payload_migrations: typeof relations_payload_migrations
+  relations_landing_page_header_nav_items_locales: typeof relations_landing_page_header_nav_items_locales
   relations_landing_page_header_nav_items: typeof relations_landing_page_header_nav_items
+  relations_landing_page_for_who_primary_items_locales: typeof relations_landing_page_for_who_primary_items_locales
   relations_landing_page_for_who_primary_items: typeof relations_landing_page_for_who_primary_items
+  relations_landing_page_for_who_secondary_items_locales: typeof relations_landing_page_for_who_secondary_items_locales
   relations_landing_page_for_who_secondary_items: typeof relations_landing_page_for_who_secondary_items
+  relations_landing_page_results_items_locales: typeof relations_landing_page_results_items_locales
   relations_landing_page_results_items: typeof relations_landing_page_results_items
+  relations_landing_page_process_steps_locales: typeof relations_landing_page_process_steps_locales
   relations_landing_page_process_steps: typeof relations_landing_page_process_steps
+  relations_landing_page_program_modules_locales: typeof relations_landing_page_program_modules_locales
   relations_landing_page_program_modules: typeof relations_landing_page_program_modules
+  relations_landing_page_expertise_stats_locales: typeof relations_landing_page_expertise_stats_locales
   relations_landing_page_expertise_stats: typeof relations_landing_page_expertise_stats
+  relations_landing_page_certificates_items_locales: typeof relations_landing_page_certificates_items_locales
   relations_landing_page_certificates_items: typeof relations_landing_page_certificates_items
+  relations_landing_page_blocks_video_review_locales: typeof relations_landing_page_blocks_video_review_locales
   relations_landing_page_blocks_video_review: typeof relations_landing_page_blocks_video_review
+  relations_landing_page_blocks_text_review_locales: typeof relations_landing_page_blocks_text_review_locales
   relations_landing_page_blocks_text_review: typeof relations_landing_page_blocks_text_review
+  relations_landing_page_reviews_video_items_locales: typeof relations_landing_page_reviews_video_items_locales
   relations_landing_page_reviews_video_items: typeof relations_landing_page_reviews_video_items
+  relations_landing_page_reviews_text_items_locales: typeof relations_landing_page_reviews_text_items_locales
   relations_landing_page_reviews_text_items: typeof relations_landing_page_reviews_text_items
+  relations_landing_page_footer_left_links_locales: typeof relations_landing_page_footer_left_links_locales
   relations_landing_page_footer_left_links: typeof relations_landing_page_footer_left_links
+  relations_landing_page_footer_right_links_locales: typeof relations_landing_page_footer_right_links_locales
   relations_landing_page_footer_right_links: typeof relations_landing_page_footer_right_links
+  relations_landing_page_footer_social_links_locales: typeof relations_landing_page_footer_social_links_locales
   relations_landing_page_footer_social_links: typeof relations_landing_page_footer_social_links
+  relations_landing_page_locales: typeof relations_landing_page_locales
   relations_landing_page: typeof relations_landing_page
 }
 

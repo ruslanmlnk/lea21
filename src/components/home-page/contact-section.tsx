@@ -5,6 +5,7 @@ import { type FormEvent, useState, useTransition } from 'react'
 import { LandingImage, SectionTitle } from './shared'
 import { Reveal } from './shared-client'
 
+import type { SupportedLocale } from '@/lib/locales'
 import type { LandingPageContent } from './types'
 
 type FormState = {
@@ -23,7 +24,13 @@ const initialFormState: FormState = {
   phone: "",
 };
 
-export function ContactSection({ contact }: { contact: LandingPageContent['contact'] }) {
+export function ContactSection({
+  contact,
+  locale,
+}: {
+  contact: LandingPageContent['contact']
+  locale: SupportedLocale
+}) {
   const [isPending, startTransition] = useTransition();
   const [formState, setFormState] = useState<FormState>(initialFormState);
   const [feedback, setFeedback] = useState<string>("");
@@ -133,7 +140,7 @@ export function ContactSection({ contact }: { contact: LandingPageContent['conta
                     disabled={isPending}
                     className="flex w-full items-center justify-center bg-[#8FAFC2] px-5 py-[13px] text-base text-white disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {isPending ? "Надсилання..." : contact.submitLabel}
+                    {isPending ? (locale === 'en' ? 'Sending...' : "Надсилання...") : contact.submitLabel}
                   </button>
                 </form>
               </div>

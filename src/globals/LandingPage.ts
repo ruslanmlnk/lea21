@@ -41,6 +41,53 @@ const collapsedArrayAdmin = {
   initCollapsed: true,
 }
 
+const nonLocalizedTextFieldNames = new Set(['buttonHref', 'ctaHref', 'href', 'instagramUrl', 'url'])
+
+function shouldLocalizeTextField(field: Field) {
+  return (
+    'name' in field
+    && typeof field.name === 'string'
+    && !nonLocalizedTextFieldNames.has(field.name)
+  )
+}
+
+function localizeTextFields(fields: Field[]): Field[] {
+  return fields.map((field): Field => {
+    if (field.type === 'text' || field.type === 'textarea') {
+      return shouldLocalizeTextField(field) ? ({ ...field, localized: true } as Field) : field
+    }
+
+    if (field.type === 'tabs') {
+      return {
+        ...field,
+        tabs: field.tabs.map((tab) => ({
+          ...tab,
+          fields: localizeTextFields(tab.fields),
+        })),
+      } as Field
+    }
+
+    if (field.type === 'blocks') {
+      return {
+        ...field,
+        blocks: field.blocks.map((block) => ({
+          ...block,
+          fields: localizeTextFields(block.fields),
+        })),
+      } as Field
+    }
+
+    if ('fields' in field && Array.isArray(field.fields)) {
+      return {
+        ...field,
+        fields: localizeTextFields(field.fields),
+      } as Field
+    }
+
+    return field
+  })
+}
+
 export const LandingPage: GlobalConfig = {
   slug: 'landing-page',
   access: {
@@ -51,7 +98,7 @@ export const LandingPage: GlobalConfig = {
     group: 'Контент',
   },
   label: 'Лендінг',
-  fields: [
+  fields: localizeTextFields([
     {
       type: 'tabs',
       tabs: [
@@ -659,5 +706,5 @@ export const LandingPage: GlobalConfig = {
         },
       ],
     },
-  ],
+  ]),
 }

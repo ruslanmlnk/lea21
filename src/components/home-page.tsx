@@ -12,11 +12,18 @@ import { ProjectSection } from './home-page/project-section'
 import { ResultsSection } from './home-page/results-section'
 import { ReviewsSection } from './home-page/reviews-section'
 import type { LandingPageContent } from './home-page/types'
+import type { SupportedLocale } from '@/lib/locales'
 
-export function HomePage({ content }: { content: LandingPageContent }) {
+export function HomePage({
+  content,
+  locale,
+}: {
+  content: LandingPageContent
+  locale: SupportedLocale
+}) {
   return (
     <main className="bg-white text-[#1F445A]">
-      <HeaderSection header={content.header} />
+      <HeaderSection header={content.header} locale={locale} />
       <HeroSection hero={content.hero} />
       <ProjectSection project={content.project} />
       <ForWhoSection forWho={content.forWho} />
@@ -27,7 +34,7 @@ export function HomePage({ content }: { content: LandingPageContent }) {
       <CertificatesSection certificates={content.certificates} />
       <ReviewsSection reviews={content.reviews} />
       <CtaSection cta={content.cta} />
-      <ContactSection contact={content.contact} />
+      <ContactSection contact={content.contact} locale={locale} />
       <FooterSection footer={content.footer} />
     </main>
   )

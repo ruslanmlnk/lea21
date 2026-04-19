@@ -9,8 +9,8 @@ import { FormSubmissions } from './collections/FormSubmissions'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { LandingPage } from './globals/LandingPage'
-import { buildLandingPageGlobalSeed, ensureLandingMedia, normalizeLandingPageCmsValue, stripLandingMediaFields } from './lib/landing-media'
-import { mergeWithDefaults } from './lib/merge-with-defaults'
+import { syncLandingPageGlobal } from './lib/landing-media'
+import { defaultLocale, payloadLocales } from './lib/locales'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,6 +25,11 @@ export default buildConfig({
   collections: [Users, Media, FormSubmissions],
   editor: lexicalEditor(),
   globals: [LandingPage],
+  localization: {
+    defaultLocale,
+    fallback: true,
+    locales: payloadLocales,
+  },
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -33,6 +38,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    push: false,
   }),
   onInit: async (payload) => {
     if (process.env.PAYLOAD_MIGRATING === 'true') {
@@ -40,32 +46,7 @@ export default buildConfig({
     }
 
     try {
-      const mediaIds = await ensureLandingMedia(payload)
-      const defaultLandingPageSeed = buildLandingPageGlobalSeed(mediaIds)
-      const existingLandingPage = await payload.findGlobal({
-        depth: 0,
-        overrideAccess: true,
-        slug: 'landing-page',
-      })
-      const normalizedExistingLandingPage = normalizeLandingPageCmsValue(existingLandingPage)
-
-      const completeLandingPage = mergeWithDefaults(
-        defaultLandingPageSeed,
-        normalizeLandingPageCmsValue(
-          stripLandingMediaFields(existingLandingPage) as Record<string, unknown>,
-        ) as Record<string, unknown>,
-      )
-
-      if (JSON.stringify(normalizedExistingLandingPage) === JSON.stringify(completeLandingPage)) {
-        return
-      }
-
-      await payload.updateGlobal({
-        data: completeLandingPage,
-        depth: 0,
-        overrideAccess: true,
-        slug: 'landing-page',
-      })
+      await syncLandingPageGlobal(payload)
     } catch (error) {
       payload.logger.error({
         err: error,

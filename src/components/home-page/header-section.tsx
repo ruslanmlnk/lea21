@@ -2,13 +2,27 @@
 
 import { useState } from 'react'
 
+import { getLocalePath, supportedLocales, type SupportedLocale } from '@/lib/locales'
+
 import type { LandingPageContent } from './types'
 
-export function HeaderSection({ header }: { header: LandingPageContent['header'] }) {
+const languageLabels: Record<SupportedLocale, string> = {
+  en: 'EN',
+  uk: 'UA',
+}
+
+export function HeaderSection({
+  header,
+  locale,
+}: {
+  header: LandingPageContent['header']
+  locale: SupportedLocale
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { ctaLabel, logoText, navItems } = header;
-  const openMenuLabel = "Відкрити меню";
-  const closeMenuLabel = "Закрити меню";
+  const openMenuLabel = locale === 'en' ? 'Open menu' : 'Відкрити меню';
+  const closeMenuLabel = locale === 'en' ? 'Close menu' : 'Закрити меню';
+  const languageSwitcherLabel = locale === 'en' ? 'Switch language' : 'Змінити мову';
 
   return (
     <header className="relative z-40 bg-white">
@@ -33,12 +47,34 @@ export function HeaderSection({ header }: { header: LandingPageContent['header']
           ))}
         </nav>
 
-        <a
-          href="#contact"
-          className="font-nav relative hidden translate-y-px justify-self-end pb-[5px] text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] transition-opacity hover:opacity-70 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-current lg:block"
-        >
-          {ctaLabel}
-        </a>
+        <div className="hidden translate-y-px items-center gap-6 justify-self-end lg:flex">
+          <div
+            aria-label={languageSwitcherLabel}
+            className="font-nav flex items-center gap-2 text-[14px] font-normal leading-5 text-[#1F445A]"
+            role="group"
+          >
+            {supportedLocales.map((itemLocale) => (
+              <a
+                key={itemLocale}
+                aria-current={itemLocale === locale ? 'page' : undefined}
+                className={
+                  itemLocale === locale
+                    ? 'border-b border-current pb-[3px]'
+                    : 'pb-[3px] opacity-55 transition-opacity hover:opacity-90'
+                }
+                href={getLocalePath(itemLocale)}
+              >
+                {languageLabels[itemLocale]}
+              </a>
+            ))}
+          </div>
+          <a
+            href="#contact"
+            className="font-nav relative pb-[5px] text-[16px] font-normal leading-6 tracking-[0.7px] text-[#1F445A] transition-opacity hover:opacity-70 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-current"
+          >
+            {ctaLabel}
+          </a>
+        </div>
 
         <div className="col-start-3 flex justify-self-end lg:hidden">
           <button
@@ -76,6 +112,27 @@ export function HeaderSection({ header }: { header: LandingPageContent['header']
             >
               {ctaLabel}
             </a>
+            <div
+              aria-label={languageSwitcherLabel}
+              className="font-nav mt-5 flex items-center justify-center gap-4 text-base text-[#1F445A]"
+              role="group"
+            >
+              {supportedLocales.map((itemLocale) => (
+                <a
+                  key={itemLocale}
+                  aria-current={itemLocale === locale ? 'page' : undefined}
+                  className={
+                    itemLocale === locale
+                      ? 'border-b border-current pb-1'
+                      : 'pb-1 opacity-55 transition-opacity hover:opacity-90'
+                  }
+                  href={getLocalePath(itemLocale)}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {languageLabels[itemLocale]}
+                </a>
+              ))}
+            </div>
           </nav>
         </div>
       ) : null}

@@ -3,7 +3,11 @@ import path from 'path'
 import type { Payload } from 'payload'
 
 import { defaultLandingPageContent } from '@/components/home-page/data'
+import { defaultEnglishLandingPageContent } from '@/components/home-page/data.en'
 import type { ImageAsset, LandingPageContent } from '@/components/home-page/types'
+
+import { defaultLocale, supportedLocales, type SupportedLocale } from './locales'
+import { mergeWithDefaults } from './merge-with-defaults'
 
 type MediaDoc = {
   filename?: null | string
@@ -20,6 +24,11 @@ type MediaSeedEntry = {
   key: string
   sourcePath: string
 }
+
+const defaultLandingPageContentByLocale = {
+  en: defaultEnglishLandingPageContent,
+  uk: defaultLandingPageContent,
+} satisfies Record<SupportedLocale, LandingPageContent>
 
 const simpleMediaFieldNames = new Set(['avatar', 'image', 'video'])
 const passthroughStringFields = new Set(['instagramUrl'])
@@ -476,12 +485,22 @@ function resolveLandingContent<T>(fallback: T, incoming?: unknown): T {
   return result as T
 }
 
-export const landingPageCmsDefaults = stripLandingMediaFields(defaultLandingPageContent) as Record<string, unknown>
+export function getDefaultLandingPageContent(locale: SupportedLocale = defaultLocale) {
+  return defaultLandingPageContentByLocale[locale]
+}
+
+export const landingPageCmsDefaults = stripLandingMediaFields(getDefaultLandingPageContent()) as Record<string, unknown>
 
 export async function ensureLandingMedia(payload: Payload) {
   const mediaIds = new Map<string, number | string>()
   const sourceMediaIds = new Map<string, number | string>()
-  const mediaSeedEntries = collectLandingMediaSeedEntries(defaultLandingPageContent)
+  const mediaSeedEntriesByLocale = Object.fromEntries(
+    supportedLocales.map((locale) => [
+      locale,
+      collectLandingMediaSeedEntries(getDefaultLandingPageContent(locale)),
+    ]),
+  ) as Record<SupportedLocale, MediaSeedEntry[]>
+  const mediaSeedEntries = mediaSeedEntriesByLocale[defaultLocale]
 
   for (const entry of mediaSeedEntries) {
     const cachedMediaId = sourceMediaIds.get(entry.sourcePath)
@@ -504,6 +523,7 @@ export async function ensureLandingMedia(payload: Payload) {
             depth: 0,
             filePath: shouldReplaceMediaFile(existingMedia, entry) ? entry.filePath : undefined,
             id: existingMedia.id,
+            locale: defaultLocale,
             overwriteExistingFiles: true,
             overrideAccess: true,
           })
@@ -522,6 +542,7 @@ export async function ensureLandingMedia(payload: Payload) {
       },
       depth: 0,
       filePath: entry.filePath,
+      locale: defaultLocale,
       overrideAccess: true,
     })
 
@@ -529,16 +550,82 @@ export async function ensureLandingMedia(payload: Payload) {
     mediaIds.set(entry.key, createdMedia.id)
   }
 
+  for (const locale of supportedLocales) {
+    if (locale === defaultLocale) {
+      continue
+    }
+
+    for (const entry of mediaSeedEntriesByLocale[locale]) {
+      const mediaId = mediaIds.get(entry.key) ?? sourceMediaIds.get(entry.sourcePath)
+
+      if (mediaId == null) {
+        continue
+      }
+
+      await payload.update({
+        collection: 'media',
+        data: {
+          alt: entry.alt,
+        },
+        depth: 0,
+        id: mediaId,
+        locale,
+        overrideAccess: true,
+      })
+    }
+  }
+
   return mediaIds
 }
 
-export function buildLandingPageGlobalSeed(mediaIds: Map<string, number | string>) {
-  return buildLandingPageMediaSeed(defaultLandingPageContent, mediaIds) as Record<string, unknown>
+export function buildLandingPageGlobalSeed(
+  mediaIds: Map<string, number | string>,
+  locale: SupportedLocale = defaultLocale,
+) {
+  return buildLandingPageMediaSeed(getDefaultLandingPageContent(locale), mediaIds) as Record<string, unknown>
 }
 
-export function resolveLandingPageContent(incoming?: unknown): LandingPageContent {
+export async function syncLandingPageGlobal(payload: Payload) {
+  const mediaIds = await ensureLandingMedia(payload)
+
+  for (const locale of supportedLocales) {
+    const defaultLandingPageSeed = buildLandingPageGlobalSeed(mediaIds, locale)
+    const existingLandingPage = await payload.findGlobal({
+      depth: 0,
+      fallbackLocale: false,
+      locale,
+      overrideAccess: true,
+      slug: 'landing-page',
+    })
+    const normalizedExistingLandingPage = normalizeLandingPageCmsValue(existingLandingPage)
+
+    const completeLandingPage = mergeWithDefaults(
+      defaultLandingPageSeed,
+      normalizeLandingPageCmsValue(
+        stripLandingMediaFields(existingLandingPage) as Record<string, unknown>,
+      ) as Record<string, unknown>,
+    )
+
+    if (JSON.stringify(normalizedExistingLandingPage) === JSON.stringify(completeLandingPage)) {
+      continue
+    }
+
+    await payload.updateGlobal({
+      data: completeLandingPage,
+      depth: 0,
+      locale,
+      overrideAccess: true,
+      slug: 'landing-page',
+    })
+  }
+}
+
+export function resolveLandingPageContent(
+  incoming?: unknown,
+  locale: SupportedLocale = defaultLocale,
+): LandingPageContent {
   return resolveLandingContent(
-    defaultLandingPageContent,
+    getDefaultLandingPageContent(locale),
     normalizeLegacyImageAssets(normalizeLegacyReviews(normalizeLegacyProgramModules(incoming))),
   )
 }
