@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { Client } from 'pg'
 
 import { defaultEnglishLandingPageContent } from '../src/components/home-page/data.en'

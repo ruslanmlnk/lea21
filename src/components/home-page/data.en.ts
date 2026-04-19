@@ -20,7 +20,7 @@ export const defaultEnglishLandingPageContent = {
   },
   hero: {
     ...defaultLandingPageContent.hero,
-    titleLineOne: 'A new state and changes in life',
+    titleLineOne: 'A new state and life changes',
     titleLineTwo: 'begin with',
     script: 'experience',
     subtitle: 'that is lived through the body',

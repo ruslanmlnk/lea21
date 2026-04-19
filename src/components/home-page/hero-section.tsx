@@ -5,6 +5,19 @@ import type { LandingPageContent } from './types'
 
 export function HeroSection({ hero }: { hero: LandingPageContent['hero'] }) {
   const mobileTitle = `${hero.titleLineOne} ${hero.titleLineTwo}`.toLocaleUpperCase("uk-UA");
+  const hasLongDesktopTitle = hero.titleLineOne.length > 28
+  const desktopTitleClassName = [
+    'hero-rise hero-delay-1 font-script uppercase text-[#1F445A]',
+    hasLongDesktopTitle
+      ? 'text-[clamp(76px,7.5vw,108px)] leading-[clamp(78px,7.55vw,109px)] min-[1440px]:text-[108px] min-[1440px]:leading-[109px]'
+      : 'text-[clamp(82px,8.75vw,126px)] leading-[clamp(82px,8.68vw,125px)] min-[1440px]:text-[126px] min-[1440px]:leading-[125px]',
+  ].join(' ')
+  const desktopDisplayClassName = [
+    'font-display text-white',
+    hasLongDesktopTitle
+      ? 'text-[clamp(40px,3.9vw,56px)] min-[1440px]:text-[56px]'
+      : 'text-[clamp(42px,4.45vw,64px)] min-[1440px]:text-[64px]',
+  ].join(' ')
 
   return (
     <section id="home" className="relative overflow-hidden bg-[#232A31]">
@@ -36,11 +49,11 @@ export function HeroSection({ hero }: { hero: LandingPageContent['hero'] }) {
         </div>
 
         <div className="relative hidden h-full px-[30px] pb-[clamp(72px,6.95vw,100px)] pt-[clamp(48px,4.72vw,68px)] lg:block min-[1440px]:pb-[100px] min-[1440px]:pt-[68px]">
-          <div className="relative z-10 flex h-full flex-col gap-[clamp(76px,9.58vw,138px)] min-[1440px]:gap-[138px]">
+          <div className="relative z-10 flex h-full flex-col gap-[clamp(40px,5vw,72px)]">
             <div className="flex flex-col items-start">
               <div className="relative w-[min(970px,72vw)] min-[1440px]:w-[970px]">
-                <h1 className="hero-rise hero-delay-1 font-script text-[clamp(82px,8.75vw,126px)] uppercase leading-[clamp(82px,8.68vw,125px)] text-[#1F445A] min-[1440px]:text-[126px] min-[1440px]:leading-[125px]">
-                  <span className="font-display text-[clamp(42px,4.45vw,64px)] text-white min-[1440px]:text-[64px]">
+                <h1 className={desktopTitleClassName}>
+                  <span className={desktopDisplayClassName}>
                     {hero.titleLineOne}
                     <br />
                     {hero.titleLineTwo}{" "}
