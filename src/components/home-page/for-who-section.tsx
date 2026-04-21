@@ -1,23 +1,28 @@
-import { benefitIcons } from './data'
-import { SvgIcon } from './shared'
+import { LandingImage } from './shared'
 import { Reveal } from './shared-client'
 
 import type { LandingPageContent } from './types'
 
-function BenefitItem({ icon, label }: { icon: string; label: string }) {
+function BenefitItem({
+  icon,
+  label,
+}: {
+  icon: LandingPageContent['forWho']['primaryItems'][number]['icon']
+  label: string
+}) {
   return (
     <div className="flex w-full flex-col items-center gap-4 text-center lg:w-[190px] lg:gap-[30px]">
-      <SvgIcon icon={icon} />
+      <LandingImage asset={icon} imgClassName="h-12 w-12 object-contain lg:h-[60px] lg:w-[60px]" reveal="none" />
       <p className="w-full whitespace-pre-line font-['Google_Sans','Product_Sans','Poppins',sans-serif] text-base leading-[1.45] text-[#1F445A]">
         {label}
       </p>
     </div>
-  );
+  )
 }
 
 export function ForWhoSection({ forWho }: { forWho: LandingPageContent['forWho'] }) {
-  const firstRow = forWho.primaryItems.map((item) => ({ icon: benefitIcons[item.icon], label: item.label }));
-  const secondRow = forWho.secondaryItems.map((item) => ({ icon: benefitIcons[item.icon], label: item.label }));
+  const firstRow = forWho.primaryItems
+  const secondRow = forWho.secondaryItems
 
   return (
     <section id="for-who" className="bg-white">

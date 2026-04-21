@@ -1,4 +1,4 @@
-import { defaultLandingPageContent } from './data'
+import { createForWhoIcon, defaultLandingPageContent } from './data'
 import type { LandingPageContent } from './types'
 
 export const defaultEnglishLandingPageContent = {
@@ -57,15 +57,36 @@ export const defaultEnglishLandingPageContent = {
     title: 'This project',
     scriptTitle: 'is for you if you:',
     primaryItems: [
-      { icon: 'battery', label: 'Feel constant fatigue\nand lack of energy' },
-      { icon: 'heart', label: 'Have inner anxiety without a clear reason' },
-      { icon: 'mind', label: 'Live in your head\nand do not feel your body' },
-      { icon: 'shield', label: 'Keep everything under control\nand cannot relax' },
+      {
+        icon: createForWhoIcon('battery', 'Battery icon'),
+        label: 'Feel constant fatigue\nand lack of energy',
+      },
+      {
+        icon: createForWhoIcon('heart', 'Heart icon'),
+        label: 'Have inner anxiety without a clear reason',
+      },
+      {
+        icon: createForWhoIcon('mind', 'Mind icon'),
+        label: 'Live in your head\nand do not feel your body',
+      },
+      {
+        icon: createForWhoIcon('shield', 'Shield icon'),
+        label: 'Keep everything under control\nand cannot relax',
+      },
     ],
     secondaryItems: [
-      { icon: 'smile', label: 'Do not feel pleasure\nfrom life' },
-      { icon: 'apple', label: 'Eat through stress\nand emotions' },
-      { icon: 'flower', label: 'Do not feel femininity\nand sexuality' },
+      {
+        icon: createForWhoIcon('smile', 'Smile icon'),
+        label: 'Do not feel pleasure\nfrom life',
+      },
+      {
+        icon: createForWhoIcon('apple', 'Apple icon'),
+        label: 'Eat through stress\nand emotions',
+      },
+      {
+        icon: createForWhoIcon('flower', 'Flower icon'),
+        label: 'Do not feel femininity\nand sexuality',
+      },
     ],
   },
   results: {

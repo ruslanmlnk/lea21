@@ -404,14 +404,14 @@ export interface LandingPage {
     scriptTitle: string;
     primaryItems?:
       | {
-          icon: 'battery' | 'heart' | 'mind' | 'shield' | 'smile' | 'apple' | 'flower';
+          icon: number | Media;
           label: string;
           id?: string | null;
         }[]
       | null;
     secondaryItems?:
       | {
-          icon: 'battery' | 'heart' | 'mind' | 'shield' | 'smile' | 'apple' | 'flower';
+          icon: number | Media;
           label: string;
           id?: string | null;
         }[]

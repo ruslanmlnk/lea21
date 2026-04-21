@@ -227,21 +227,7 @@ export const LandingPage: GlobalConfig = {
                       ?.primaryItems ?? [],
                   admin: collapsedArrayAdmin,
                   fields: [
-                    {
-                      name: 'icon',
-                      label: 'Іконка',
-                      required: true,
-                      type: 'select',
-                      options: [
-                        { label: 'battery', value: 'battery' },
-                        { label: 'heart', value: 'heart' },
-                        { label: 'mind', value: 'mind' },
-                        { label: 'shield', value: 'shield' },
-                        { label: 'smile', value: 'smile' },
-                        { label: 'apple', value: 'apple' },
-                        { label: 'flower', value: 'flower' },
-                      ],
-                    },
+                    imageAssetField('icon', 'Іконка'),
                     {
                       name: 'label',
                       label: 'Текст',
@@ -259,21 +245,7 @@ export const LandingPage: GlobalConfig = {
                       ?.secondaryItems ?? [],
                   admin: collapsedArrayAdmin,
                   fields: [
-                    {
-                      name: 'icon',
-                      label: 'Іконка',
-                      required: true,
-                      type: 'select',
-                      options: [
-                        { label: 'battery', value: 'battery' },
-                        { label: 'heart', value: 'heart' },
-                        { label: 'mind', value: 'mind' },
-                        { label: 'shield', value: 'shield' },
-                        { label: 'smile', value: 'smile' },
-                        { label: 'apple', value: 'apple' },
-                        { label: 'flower', value: 'flower' },
-                      ],
-                    },
+                    imageAssetField('icon', 'Іконка'),
                     {
                       name: 'label',
                       label: 'Текст',

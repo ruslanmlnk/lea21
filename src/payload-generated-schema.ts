@@ -29,14 +29,6 @@ export const enum_form_submissions_status = pgEnum('enum_form_submissions_status
   'in-progress',
   'resolved',
 ])
-export const enum_landing_page_for_who_primary_items_icon = pgEnum(
-  'enum_landing_page_for_who_primary_items_icon',
-  ['battery', 'heart', 'mind', 'shield', 'smile', 'apple', 'flower'],
-)
-export const enum_landing_page_for_who_secondary_items_icon = pgEnum(
-  'enum_landing_page_for_who_secondary_items_icon',
-  ['battery', 'heart', 'mind', 'shield', 'smile', 'apple', 'flower'],
-)
 export const enum_landing_page_expertise_stats_align = pgEnum(
   'enum_landing_page_expertise_stats_align',
   ['start', 'end'],
@@ -349,11 +341,16 @@ export const landing_page_for_who_primary_items = pgTable(
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    icon: enum_landing_page_for_who_primary_items_icon('icon').notNull(),
+    icon: integer('icon_id')
+      .notNull()
+      .references(() => media.id, {
+        onDelete: 'set null',
+      }),
   },
   (columns) => [
     index('landing_page_for_who_primary_items_order_idx').on(columns._order),
     index('landing_page_for_who_primary_items_parent_id_idx').on(columns._parentID),
+    index('landing_page_for_who_primary_items_icon_idx').on(columns.icon),
     foreignKey({
       columns: [columns['_parentID']],
       foreignColumns: [landing_page.id],
@@ -389,11 +386,16 @@ export const landing_page_for_who_secondary_items = pgTable(
     _order: integer('_order').notNull(),
     _parentID: integer('_parent_id').notNull(),
     id: varchar('id').primaryKey(),
-    icon: enum_landing_page_for_who_secondary_items_icon('icon').notNull(),
+    icon: integer('icon_id')
+      .notNull()
+      .references(() => media.id, {
+        onDelete: 'set null',
+      }),
   },
   (columns) => [
     index('landing_page_for_who_secondary_items_order_idx').on(columns._order),
     index('landing_page_for_who_secondary_items_parent_id_idx').on(columns._parentID),
+    index('landing_page_for_who_secondary_items_icon_idx').on(columns.icon),
     foreignKey({
       columns: [columns['_parentID']],
       foreignColumns: [landing_page.id],
@@ -1219,6 +1221,11 @@ export const relations_landing_page_for_who_primary_items = relations(
     _locales: many(landing_page_for_who_primary_items_locales, {
       relationName: '_locales',
     }),
+    icon: one(media, {
+      fields: [landing_page_for_who_primary_items.icon],
+      references: [media.id],
+      relationName: 'icon',
+    }),
   }),
 )
 export const relations_landing_page_for_who_secondary_items_locales = relations(
@@ -1241,6 +1248,11 @@ export const relations_landing_page_for_who_secondary_items = relations(
     }),
     _locales: many(landing_page_for_who_secondary_items_locales, {
       relationName: '_locales',
+    }),
+    icon: one(media, {
+      fields: [landing_page_for_who_secondary_items.icon],
+      references: [media.id],
+      relationName: 'icon',
     }),
   }),
 )
@@ -1661,8 +1673,6 @@ export const relations_landing_page = relations(landing_page, ({ one, many }) =>
 type DatabaseSchema = {
   enum__locales: typeof enum__locales
   enum_form_submissions_status: typeof enum_form_submissions_status
-  enum_landing_page_for_who_primary_items_icon: typeof enum_landing_page_for_who_primary_items_icon
-  enum_landing_page_for_who_secondary_items_icon: typeof enum_landing_page_for_who_secondary_items_icon
   enum_landing_page_expertise_stats_align: typeof enum_landing_page_expertise_stats_align
   users_sessions: typeof users_sessions
   users: typeof users

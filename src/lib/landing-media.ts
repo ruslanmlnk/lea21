@@ -6,6 +6,7 @@ import { defaultLandingPageContent } from '@/components/home-page/data'
 import { defaultEnglishLandingPageContent } from '@/components/home-page/data.en'
 import type { ImageAsset, LandingPageContent } from '@/components/home-page/types'
 
+import { forWhoIconSourcePaths, isLegacyForWhoIconKey } from './for-who-icons'
 import { defaultLocale, supportedLocales, type SupportedLocale } from './locales'
 import { mergeWithDefaults } from './merge-with-defaults'
 
@@ -387,6 +388,47 @@ function normalizeLegacyReviews(value: unknown) {
   return result
 }
 
+function normalizeLegacyForWhoIcons(value: unknown) {
+  if (!value || typeof value !== 'object') {
+    return value
+  }
+
+  const result = { ...(value as Record<string, unknown>) }
+  const forWho = result.forWho
+
+  if (!forWho || typeof forWho !== 'object') {
+    return result
+  }
+
+  const forWhoResult = { ...(forWho as Record<string, unknown>) }
+
+  for (const key of ['primaryItems', 'secondaryItems'] as const) {
+    const items = forWhoResult[key]
+
+    if (!Array.isArray(items)) {
+      continue
+    }
+
+    forWhoResult[key] = items.map((item) => {
+      if (!item || typeof item !== 'object') {
+        return item
+      }
+
+      const itemResult = { ...(item as Record<string, unknown>) }
+
+      if (isLegacyForWhoIconKey(itemResult.icon)) {
+        itemResult.icon = forWhoIconSourcePaths[itemResult.icon]
+      }
+
+      return itemResult
+    })
+  }
+
+  result.forWho = forWhoResult
+
+  return result
+}
+
 function normalizeLegacyImageAssets(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map((item) => normalizeLegacyImageAssets(item))
@@ -626,10 +668,14 @@ export function resolveLandingPageContent(
 ): LandingPageContent {
   return resolveLandingContent(
     getDefaultLandingPageContent(locale),
-    normalizeLegacyImageAssets(normalizeLegacyReviews(normalizeLegacyProgramModules(incoming))),
+    normalizeLegacyForWhoIcons(
+      normalizeLegacyImageAssets(normalizeLegacyReviews(normalizeLegacyProgramModules(incoming))),
+    ),
   )
 }
 
 export function normalizeLandingPageCmsValue<T>(value: T): T {
-  return normalizeLegacyImageAssets(normalizeLegacyReviews(normalizeLegacyProgramModules(value))) as T
+  return normalizeLegacyForWhoIcons(
+    normalizeLegacyImageAssets(normalizeLegacyReviews(normalizeLegacyProgramModules(value))),
+  ) as T
 }

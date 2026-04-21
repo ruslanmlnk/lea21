@@ -143,7 +143,7 @@ export function HeroDuration({
 export function BenefitCard({ item }: { item: Benefit }) {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 px-4 py-8 text-center lg:gap-[30px] lg:px-6 lg:py-0">
-      <SvgIcon icon={item.icon} />
+      <LandingImage asset={item.icon} imgClassName="h-12 w-12 object-contain lg:h-[60px] lg:w-[60px]" reveal="none" />
       <p className="max-w-[190px] text-base leading-[1.45] text-[#1F445A]">{item.label}</p>
     </div>
   )

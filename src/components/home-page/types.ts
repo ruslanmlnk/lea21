@@ -13,17 +13,8 @@ export type SocialLink = {
   url: string
 }
 
-export type BenefitIconKey =
-  | 'battery'
-  | 'heart'
-  | 'mind'
-  | 'shield'
-  | 'smile'
-  | 'apple'
-  | 'flower'
-
 export type BenefitItem = {
-  icon: BenefitIconKey
+  icon: ImageAsset
   label: string
 }
 
