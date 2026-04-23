@@ -168,8 +168,11 @@ export function ProcessCard({
 
 export function CertificateCard({ asset }: { asset: ImageAsset }) {
   return (
-    <div className="flex shrink-0 items-center justify-center bg-[#8FAFC2] p-5 lg:p-8">
-      <LandingImage asset={asset} imgClassName="h-[140px] w-[100px] border border-[#D5E0E8] object-cover lg:h-[210px] lg:w-[150px]" />
+    <div className="flex h-[180px] shrink-0 items-center justify-center bg-[#8FAFC2] p-5 lg:h-[274px] lg:p-8">
+      <LandingImage
+        asset={asset}
+        imgClassName="h-full w-auto max-w-[calc(100vw-7rem)] border border-[#D5E0E8] object-contain lg:max-w-[420px]"
+      />
     </div>
   )
 }

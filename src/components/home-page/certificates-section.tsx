@@ -8,20 +8,47 @@ import { Reveal, ReviewArrowButton } from './shared-client'
 import type { LandingPageContent } from './types'
 
 export function CertificatesSection({ certificates }: { certificates: LandingPageContent['certificates'] }) {
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const scrollerRef = useRef<HTMLDivElement | null>(null)
 
-  const scrollCertificates = (direction: "left" | "right") => {
-    const scroller = scrollerRef.current;
+  const scrollCertificates = (direction: 'left' | 'right') => {
+    const scroller = scrollerRef.current
 
     if (!scroller) {
-      return;
+      return
+    }
+
+    const slides = Array.from(scroller.querySelectorAll<HTMLElement>('[data-certificate-slide]'))
+    const scrollerLeft = scroller.getBoundingClientRect().left
+    const currentScrollLeft = scroller.scrollLeft
+    const slidePositions = slides.map(
+      (slide) => slide.getBoundingClientRect().left - scrollerLeft + currentScrollLeft,
+    )
+    let targetPosition: number | undefined
+
+    if (direction === 'right') {
+      targetPosition = slidePositions.find((position) => position > currentScrollLeft + 8)
+    } else {
+      for (let index = slidePositions.length - 1; index >= 0; index -= 1) {
+        if (slidePositions[index] < currentScrollLeft - 8) {
+          targetPosition = slidePositions[index]
+          break
+        }
+      }
+    }
+
+    if (targetPosition != null) {
+      scroller.scrollTo({
+        behavior: 'smooth',
+        left: targetPosition,
+      })
+      return
     }
 
     scroller.scrollBy({
-      left: direction === "left" ? -230 : 230,
-      behavior: "smooth",
-    });
-  };
+      behavior: 'smooth',
+      left: direction === 'left' ? -scroller.clientWidth * 0.75 : scroller.clientWidth * 0.75,
+    })
+  }
 
   return (
     <section className="bg-white">
@@ -48,18 +75,22 @@ export function CertificatesSection({ certificates }: { certificates: LandingPag
           <div className="flex w-full flex-col items-center gap-6 lg:gap-[50px]">
             <div
               ref={scrollerRef}
-              className="flex w-full snap-x snap-mandatory justify-start gap-5 overflow-x-auto no-scrollbar lg:justify-center lg:gap-10"
+              className="no-scrollbar w-full snap-x snap-mandatory overflow-x-auto"
             >
-              {certificates.items.map((item, index) => (
-                <Reveal key={`${item.label}-${index}`} delay={index * 0.05} className="shrink-0 snap-start">
-                  <CertificateCard asset={item.image} />
-                </Reveal>
-              ))}
+              <div className="mx-auto flex w-max items-center gap-5 lg:gap-10">
+                {certificates.items.map((item, index) => (
+                  <div key={`${item.label}-${index}`} data-certificate-slide="" className="shrink-0 snap-start">
+                    <Reveal delay={index * 0.05}>
+                      <CertificateCard asset={item.image} />
+                    </Reveal>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex w-[140px] items-center justify-between">
-              <ReviewArrowButton direction="left" onClick={() => scrollCertificates("left")} />
-              <ReviewArrowButton direction="right" onClick={() => scrollCertificates("right")} />
+              <ReviewArrowButton direction="left" onClick={() => scrollCertificates('left')} />
+              <ReviewArrowButton direction="right" onClick={() => scrollCertificates('right')} />
             </div>
           </div>
         </div>
