@@ -1,6 +1,8 @@
-import type { DefaultValue, Field, GlobalConfig } from 'payload'
+import type { DefaultValue, Field, GlobalBeforeValidateHook, GlobalConfig } from 'payload'
 
 import { landingPageCmsDefaults } from '@/lib/landing-media'
+
+type CertificateItemData = Record<string, unknown>
 
 const imageAssetField = (
   name: string,
@@ -40,6 +42,53 @@ const instagramUrlField: Field = {
 const collapsedArrayAdmin = {
   initCollapsed: true,
 }
+
+function getDefaultCertificateLabel(index: number) {
+  const certificateDefaults = landingPageCmsDefaults.certificates as
+    | { items?: Array<{ label?: unknown }> }
+    | undefined
+  const label = certificateDefaults?.items?.[index]?.label
+
+  return typeof label === 'string' && label.trim().length > 0
+    ? label
+    : `Certificate ${index + 1}`
+}
+
+function fillCertificateLabels(data: unknown) {
+  if (!data || typeof data !== 'object') {
+    return data
+  }
+
+  const landingPageData = data as Record<string, unknown>
+  const certificates = landingPageData.certificates
+
+  if (!certificates || typeof certificates !== 'object') {
+    return data
+  }
+
+  const items = (certificates as Record<string, unknown>).items
+
+  if (!Array.isArray(items)) {
+    return data
+  }
+
+  items.forEach((item, index) => {
+    if (!item || typeof item !== 'object') {
+      return
+    }
+
+    const certificateItem = item as CertificateItemData
+    const label = certificateItem.label
+
+    if (typeof label !== 'string' || label.trim().length === 0) {
+      certificateItem.label = getDefaultCertificateLabel(index)
+    }
+  })
+
+  return data
+}
+
+const fillMissingCertificateLabels: GlobalBeforeValidateHook = ({ data }) => fillCertificateLabels(data)
 
 const nonLocalizedTextFieldNames = new Set(['buttonHref', 'ctaHref', 'href', 'instagramUrl', 'url'])
 
@@ -98,6 +147,9 @@ export const LandingPage: GlobalConfig = {
     group: 'Контент',
   },
   label: 'Лендінг',
+  hooks: {
+    beforeValidate: [fillMissingCertificateLabels],
+  },
   fields: localizeTextFields([
     {
       type: 'tabs',
